@@ -26,6 +26,12 @@ string MockArduino::callDigitalWrite(int pin, int value){
   return s.str();
 }
 
+string MockArduino::callAnalogWrite(int pin, int value){
+  stringstream s;
+  s << "analogWrite(" << pin << ", " << value<< ")";
+  return s.str();
+}
+
 string MockArduino::callDelayMicroseconds(int mu_sec){
   stringstream s;
   s << "delayMicroseconds(" << mu_sec << ")";
@@ -55,6 +61,11 @@ void MockArduino::digitalWrite(int pin, int value){
   calls.push_back(callDigitalWrite(pin, value));
 }
 
+void MockArduino::analogWrite(int pin, int value){
+  pin_out[pin] = value;
+  calls.push_back(callAnalogWrite(pin, value));
+}
+
 void MockArduino::pinMode(int pin, int mode){
   pin_mode[pin] = mode;
   calls.push_back(callPinMode(pin, mode));
@@ -71,8 +82,13 @@ void pinMode(int pin, int mode) {
 int digitalRead(int pin) {
 	return MockArduino::instance().pin_in[pin];
 }
+
 void digitalWrite(int pin, int value) {
 	MockArduino::instance().digitalWrite(pin, value);
+}
+
+void analogWrite(int pin, int value) {
+	MockArduino::instance().analogWrite(pin, value);
 }
 
 void delay(int u_sec) {

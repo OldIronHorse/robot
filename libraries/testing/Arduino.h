@@ -12,11 +12,13 @@ class MockArduino {
     void reset();
 
     void digitalWrite(int pin, int value);
+    void analogWrite(int pin, int value);
     void pinMode(int pin, int mode);
     void delayMicroseconds(int mu_sec);
 
     static string callPinMode(int pin, int mode);
     static string callDigitalWrite(int pin, int value);
+    static string callAnalogWrite(int pin, int value);
     static string callDelayMicroseconds(int mu_sec);
 
     void dumpCalls(ostream& os);
@@ -48,6 +50,7 @@ extern "C"{
 void pinMode(int pin, int mode);
 int digitalRead(int pin);
 void digitalWrite(int pin, int value);
+void analogWrite(int pin, int value);
 void delay(int m_sec);
 void delayMicroseconds(int mu_sec);
 int millis();
