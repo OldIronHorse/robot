@@ -1,3 +1,8 @@
+#ifndef rover_h
+#define rover_h
+
+#include <Ultrasonic.h>
+
 #define PIN_SPEED_2 5
 #define PIN_SPEED_1 6
 #define PIN_DIRECTION_2 7
@@ -6,6 +11,12 @@
 namespace rover{
 
 const unsigned int max_speed = 255;
+
+Ultrasonic ranger(12, 13);
+
+long range(){
+  return ranger.Ranging(CM);
+}
 
 void setup(){
   pinMode(PIN_SPEED_1, OUTPUT);
@@ -53,3 +64,5 @@ void right(unsigned int speed){
 }
 
 }
+
+#endif

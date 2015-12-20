@@ -5,6 +5,7 @@
 #include "Arduino.h"
 
 #include "../rover.h"
+#include "../algo.h"
 
 void set_up() {
   MockArduino::instance().reset();
@@ -60,6 +61,23 @@ void test_left(){
   assertEqual(HIGH, MockArduino::instance().pin_out[8]);
 }
 
+void test_turn_right_to_avoid_no_obstruction(){
+  rover::ranger.distance_cm = 30;
+  turn_right_to_avoid(20);
+  assertEqual(255, MockArduino::instance().pin_out[5]);
+  assertEqual(255, MockArduino::instance().pin_out[6]);
+  assertEqual(LOW, MockArduino::instance().pin_out[7]);
+  assertEqual(LOW, MockArduino::instance().pin_out[8]);
+}
+
+void test_turn_right_to_avoid_obstruction(){
+  rover::ranger.distance_cm = 10;
+  turn_right_to_avoid(20);
+  assertEqual(127, MockArduino::instance().pin_out[5]);
+  assertEqual(127, MockArduino::instance().pin_out[6]);
+  assertEqual(HIGH, MockArduino::instance().pin_out[7]);
+  assertEqual(LOW, MockArduino::instance().pin_out[8]);
+}
 
 TestFunc tests[] = {&test_setup,
                     &test_forward,
@@ -67,6 +85,8 @@ TestFunc tests[] = {&test_setup,
                     &test_stop,
                     &test_right,
                     &test_left,
+                    &test_turn_right_to_avoid_no_obstruction,
+                    &test_turn_right_to_avoid_obstruction,
                     0};
 
 int main(void) {
