@@ -3,9 +3,9 @@
 #define PIN_DIRECTION_2 7
 #define PIN_DIRECTION_1 8
 
-#define MAX_SPEED 255
-
 namespace rover{
+
+const unsigned int max_speed = 255;
 
 void setup(){
   pinMode(PIN_SPEED_1, OUTPUT);
