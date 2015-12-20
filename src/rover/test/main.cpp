@@ -30,8 +30,43 @@ void test_forward(){
   assertEqual(LOW, MockArduino::instance().pin_out[8]);
 }
 
+void test_back(){
+  rover::back(200);
+  assertEqual(200, MockArduino::instance().pin_out[5]);
+  assertEqual(200, MockArduino::instance().pin_out[6]);
+  assertEqual(HIGH, MockArduino::instance().pin_out[7]);
+  assertEqual(HIGH, MockArduino::instance().pin_out[8]);
+}
+
+void test_stop(){
+  rover::stop();
+  assertEqual(0, MockArduino::instance().pin_out[5]);
+  assertEqual(0, MockArduino::instance().pin_out[6]);
+}
+
+void test_right(){
+  rover::right(200);
+  assertEqual(200, MockArduino::instance().pin_out[5]);
+  assertEqual(200, MockArduino::instance().pin_out[6]);
+  assertEqual(HIGH, MockArduino::instance().pin_out[7]);
+  assertEqual(LOW, MockArduino::instance().pin_out[8]);
+}
+
+void test_left(){
+  rover::left(200);
+  assertEqual(200, MockArduino::instance().pin_out[5]);
+  assertEqual(200, MockArduino::instance().pin_out[6]);
+  assertEqual(LOW, MockArduino::instance().pin_out[7]);
+  assertEqual(HIGH, MockArduino::instance().pin_out[8]);
+}
+
+
 TestFunc tests[] = {&test_setup,
                     &test_forward,
+                    &test_back,
+                    &test_stop,
+                    &test_right,
+                    &test_left,
                     0};
 
 int main(void) {
