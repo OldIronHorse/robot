@@ -7,4 +7,10 @@ void setup(){
 
 void loop(){
   turn_right_to_avoid(20);
+  /*switch(rover::command_state()){
+    case rover::cmd_go:
+      turn_right_to_avoid(20);
+    default:
+      rover::stop();
+  }*/
 }

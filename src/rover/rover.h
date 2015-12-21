@@ -2,6 +2,7 @@
 #define rover_h
 
 #include <Ultrasonic.h>
+#include <IRremote.h>
 
 #define PIN_SPEED_2 5
 #define PIN_SPEED_1 6
@@ -18,6 +19,22 @@ long range(){
   return ranger.Ranging(CM);
 }
 
+IRrecv remote(11);
+
+const int cmd_stop = 0;
+const int cmd_go = 1;
+
+int cmd_state = cmd_stop;
+
+int command_state(){
+  decode_results result;
+  if(remote.decode(&result)){
+    //TODO: map result.value to stop/go
+    remote.resume();
+  }
+  return cmd_state;
+}
+
 void setup(){
   pinMode(PIN_SPEED_1, OUTPUT);
   pinMode(PIN_SPEED_2, OUTPUT);
@@ -28,6 +45,8 @@ void setup(){
   analogWrite(PIN_SPEED_2, 0);
   digitalWrite(PIN_DIRECTION_1, LOW);
   digitalWrite(PIN_DIRECTION_2, LOW);
+
+  remote.enableIRIn();
 }
 
 void forward(unsigned int speed){
