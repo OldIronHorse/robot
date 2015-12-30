@@ -69,15 +69,15 @@ void stop(){
 }
 
 void left(unsigned int speed){
-  digitalWrite(PIN_DIRECTION_1, HIGH);
-  digitalWrite(PIN_DIRECTION_2, LOW);
+  digitalWrite(PIN_DIRECTION_2, HIGH);
+  digitalWrite(PIN_DIRECTION_1, LOW);
   analogWrite(PIN_SPEED_1, speed);
   analogWrite(PIN_SPEED_2, speed);
 }
 
 void right(unsigned int speed){
-  digitalWrite(PIN_DIRECTION_1, LOW);
-  digitalWrite(PIN_DIRECTION_2, HIGH);
+  digitalWrite(PIN_DIRECTION_2, LOW);
+  digitalWrite(PIN_DIRECTION_1, HIGH);
   analogWrite(PIN_SPEED_1, speed);
   analogWrite(PIN_SPEED_2, speed);
 }

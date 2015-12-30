@@ -4,7 +4,7 @@ void forward(){
   rover::forward(rover::max_speed);
   delay(2000);
   rover::right(rover::max_speed);
-  delay(2000);
+  delay(500);
 }
 
 void turn_right_to_avoid(long min_range_cm){
