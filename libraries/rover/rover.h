@@ -19,21 +19,7 @@ long range(){
   return ranger.Ranging(CM);
 }
 
-IRrecv remote(9);
-
-const int cmd_stop = 0;
-const int cmd_go = 1;
-
-int cmd_state = cmd_stop;
-
-int command_state(){
-  decode_results result;
-  if(remote.decode(&result)){
-    //TODO: map result.value to stop/go
-    remote.resume();
-  }
-  return cmd_state;
-}
+IRrecv ir_recv(9);
 
 void setup(){
   pinMode(PIN_SPEED_1, OUTPUT);
@@ -46,7 +32,7 @@ void setup(){
   digitalWrite(PIN_DIRECTION_1, LOW);
   digitalWrite(PIN_DIRECTION_2, LOW);
 
-  remote.enableIRIn();
+  ir_recv.enableIRIn();
 }
 
 void forward(unsigned int speed){
