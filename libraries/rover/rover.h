@@ -19,7 +19,7 @@ long range(){
   return ranger.Ranging(CM);
 }
 
-IRrecv remote(11);
+IRrecv remote(9);
 
 const int cmd_stop = 0;
 const int cmd_go = 1;

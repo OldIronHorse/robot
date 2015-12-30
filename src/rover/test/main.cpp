@@ -3,8 +3,8 @@
 #include <algorithm>
 #include "testing.h"
 #include "Arduino.h"
+#include <rover.h>
 
-#include "../rover.h"
 #include "../algo.h"
 
 void set_up() {
