@@ -57,8 +57,15 @@ void stop(){
 void left(unsigned int speed){
   digitalWrite(PIN_DIRECTION_2, HIGH);
   digitalWrite(PIN_DIRECTION_1, LOW);
-  analogWrite(PIN_SPEED_1, speed);
   analogWrite(PIN_SPEED_2, speed);
+  analogWrite(PIN_SPEED_1, speed);
+}
+
+void curve(unsigned int left_speed, unsigned int right_speed){
+  digitalWrite(PIN_DIRECTION_1, LOW);
+  digitalWrite(PIN_DIRECTION_2, LOW);
+  analogWrite(PIN_SPEED_2, left_speed);
+  analogWrite(PIN_SPEED_1, right_speed);
 }
 
 void right(unsigned int speed){

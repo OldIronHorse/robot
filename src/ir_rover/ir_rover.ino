@@ -25,10 +25,13 @@ void loop(){
       case ir_cmd::left:
         rover::left(rover::max_speed);
         break;
-      case ir_cmd::ok:
-        rover::stop();
+      case ir_cmd::skip_forward:
+        rover::curve(rover::max_speed,rover::max_speed*0.75);
         break;
-      default:
+      case ir_cmd::skip_back:
+        rover::curve(rover::max_speed*0.75,rover::max_speed);
+        break;
+      case ir_cmd::ok:
         rover::stop();
         break;
     }
@@ -36,5 +39,6 @@ void loop(){
     // use & 0xFF mask to get value
     // use right shift to check for repeat/repress
     rover::ir_recv.resume();
+    //rover::stop();
   }
 }

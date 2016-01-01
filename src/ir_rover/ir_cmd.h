@@ -15,8 +15,8 @@ const unsigned long left = 0x16;
 // pause 0x_30
 // rwd 0x_32
 // ffwd 0x_34
-// skip back 0x_24
-// skip forward 0x_1E
+const unsigned long skip_back = 0x24;
+const unsigned long skip_forward = 0x1E;
 // on/off 0x_3D
 // digits 0x_0n
 // home 0x_3B
