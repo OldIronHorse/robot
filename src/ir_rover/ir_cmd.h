@@ -13,8 +13,8 @@ const unsigned long left = 0x16;
 // stop 0x_36
 // play 0x_35
 // pause 0x_30
-// rwd 0x_32
-// ffwd 0x_34
+const unsigned long rwd = 0x32;
+const unsigned long ffwd = 0x34;
 const unsigned long skip_back = 0x24;
 const unsigned long skip_forward = 0x1E;
 // on/off 0x_3D

@@ -26,10 +26,16 @@ void loop(){
         rover::left(rover::max_speed);
         break;
       case ir_cmd::skip_forward:
-        rover::curve(rover::max_speed,rover::max_speed*0.75);
+        rover::forward_curve(rover::max_speed,rover::max_speed*0.75);
         break;
       case ir_cmd::skip_back:
-        rover::curve(rover::max_speed*0.75,rover::max_speed);
+        rover::forward_curve(rover::max_speed*0.75,rover::max_speed);
+        break;
+      case ir_cmd::ffwd:
+        rover::back_curve(rover::max_speed,rover::max_speed*0.75);
+        break;
+      case ir_cmd::rwd:
+        rover::back_curve(rover::max_speed*0.75,rover::max_speed);
         break;
       case ir_cmd::ok:
         rover::stop();
