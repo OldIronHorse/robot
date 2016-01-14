@@ -41,10 +41,17 @@ void loop(){
         rover::stop();
         break;
     }
-    //TODO switch on rover::ir_value
+    //TODO
     // use & 0xFF mask to get value
     // use right shift to check for repeat/repress
     rover::ir_recv.resume();
-    //rover::stop();
   }
+  Serial.println(rover::range());
+  /*
+  if(rover::range() < 20){
+    rover::back(rover::max_speed);
+    delay(300);
+    rover::stop();
+  }
+  */
 }
