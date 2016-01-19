@@ -12,6 +12,9 @@
 namespace rover{
 
 const unsigned int max_speed = 255;
+const unsigned int half_speed = 127;
+const unsigned int quarter_speed = 64;
+const unsigned int third_speed = 85;
 
 Ultrasonic ranger(12, 13);
 

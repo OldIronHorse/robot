@@ -19,6 +19,16 @@ const unsigned long skip_back = 0x24;
 const unsigned long skip_forward = 0x1E;
 // on/off 0x_3D
 // digits 0x_0n
+const unsigned long d0 = 0x00;
+const unsigned long d1 = 0x01;
+const unsigned long d2 = 0x02;
+const unsigned long d3 = 0x03;
+const unsigned long d4 = 0x04;
+const unsigned long d5 = 0x05;
+const unsigned long d6 = 0x06;
+const unsigned long d7 = 0x07;
+const unsigned long d8 = 0x08;
+const unsigned long d9 = 0x09;
 // home 0x_3B
 // "back" 0x_1F
 // "menu" 0x_0D
