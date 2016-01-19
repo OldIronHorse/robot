@@ -34,8 +34,8 @@ const unsigned long d9 = 0x09;
 // "menu" 0x_0D
 // "tv" 0x_1C
 const unsigned long ok = 0x25;
-// vol+ 0x_10
-// vol- 0x_11
+const unsigned long vol_up = 0x10;
+const unsigned long vol_down = 0x11;
 // ch+ 0x_20
 // ch- 0x_21
 // mute 0x_0F
