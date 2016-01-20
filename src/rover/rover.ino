@@ -1,7 +1,10 @@
+#define DEBUG
+#include <DebugUtils.h>
 #include <rover.h>
 #include "algo.h"
 
 void setup(){
+  DEBUG_INIT(9600)
   rover::setup();
 }
 

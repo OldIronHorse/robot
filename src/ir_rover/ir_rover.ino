@@ -11,6 +11,16 @@ decode_results results;
 unsigned long speed = rover::max_speed;
 unsigned long last_cmd = 0;
 
+void square(){
+  for(int i = 0; i < 4; ++i){
+    rover::forward(rover::max_speed);
+    delay(700);
+    rover::right(rover::max_speed);
+    delay(900);
+  }
+  rover::stop();
+}
+
 void loop(){
   if(rover::ir_recv.decode(&results)){
     unsigned long cmd = ir_cmd::cmd_from_value(results.value);
@@ -40,19 +50,22 @@ void loop(){
         rover::left(speed);
         break;
       case ir_cmd::skip_forward:
-        rover::forward_curve(speed,speed);
+        rover::forward_curve(speed,0.75*speed);
         break;
       case ir_cmd::skip_back:
         rover::forward_curve(0.75*speed,speed);
         break;
       case ir_cmd::ffwd:
-        rover::back_curve(speed,0.75*speed);
+        rover::forward_curve(speed,0);
         break;
       case ir_cmd::rwd:
-        rover::back_curve(0.75*speed,speed);
+        rover::forward_curve(0,speed);
         break;
       case ir_cmd::ok:
         rover::stop();
+        break;
+      case ir_cmd::d1:
+        square();
         break;
       //TODO: pre-programmed moves for digits 0-9
       // Make sure rover still responds to input
