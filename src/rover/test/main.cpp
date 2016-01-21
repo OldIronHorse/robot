@@ -3,9 +3,9 @@
 #include <algorithm>
 #include "testing.h"
 #include "Arduino.h"
-#include <rover.h>
+#include "../../../libraries/rover/rover.h"
 
-#include "../algo.h"
+//TODO: Move this to rover library test suite..
 
 void set_up() {
   MockArduino::instance().reset();
@@ -49,32 +49,14 @@ void test_right(){
   rover::right(200);
   assertEqual(200, MockArduino::instance().pin_out[5]);
   assertEqual(200, MockArduino::instance().pin_out[6]);
-  assertEqual(HIGH, MockArduino::instance().pin_out[7]);
-  assertEqual(LOW, MockArduino::instance().pin_out[8]);
+  assertEqual(LOW, MockArduino::instance().pin_out[7]);
+  assertEqual(HIGH, MockArduino::instance().pin_out[8]);
 }
 
 void test_left(){
   rover::left(200);
   assertEqual(200, MockArduino::instance().pin_out[5]);
   assertEqual(200, MockArduino::instance().pin_out[6]);
-  assertEqual(LOW, MockArduino::instance().pin_out[7]);
-  assertEqual(HIGH, MockArduino::instance().pin_out[8]);
-}
-
-void test_turn_right_to_avoid_no_obstruction(){
-  rover::ranger.distance_cm = 30;
-  turn_right_to_avoid(20);
-  assertEqual(255, MockArduino::instance().pin_out[5]);
-  assertEqual(255, MockArduino::instance().pin_out[6]);
-  assertEqual(LOW, MockArduino::instance().pin_out[7]);
-  assertEqual(LOW, MockArduino::instance().pin_out[8]);
-}
-
-void test_turn_right_to_avoid_obstruction(){
-  rover::ranger.distance_cm = 10;
-  turn_right_to_avoid(20);
-  assertEqual(127, MockArduino::instance().pin_out[5]);
-  assertEqual(127, MockArduino::instance().pin_out[6]);
   assertEqual(HIGH, MockArduino::instance().pin_out[7]);
   assertEqual(LOW, MockArduino::instance().pin_out[8]);
 }
@@ -85,8 +67,6 @@ TestFunc tests[] = {&test_setup,
                     &test_stop,
                     &test_right,
                     &test_left,
-                    &test_turn_right_to_avoid_no_obstruction,
-                    &test_turn_right_to_avoid_obstruction,
                     0};
 
 int main(void) {
