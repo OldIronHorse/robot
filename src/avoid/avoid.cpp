@@ -17,6 +17,7 @@ void Avoid::enter_running(){
 void Avoid::enter_obstructed(){
   state = obstructed;
   rover.back_curve(0, rover.max_speed);
+  delay(1000);
 }
 
 void Avoid::setup(){
