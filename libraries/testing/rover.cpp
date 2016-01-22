@@ -2,12 +2,7 @@
 #include <sstream>
 
 void Rover::reset(){
-  mock_range = 0;
   calls.empty();
-}
-
-long Rover::range(){
-  return mock_range;
 }
 
 void Rover::setup(){

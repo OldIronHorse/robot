@@ -1,14 +1,16 @@
 #include <rover.h>
+#include <IRremote.h>
 #include "ir_cmd.h"
 
+IRrecv ir_recv(9);
+decode_results results;
 Rover rover;
 
 void setup(){
   rover.setup();
+  ir_recv.enableIRIn();
   //Serial.begin(9600);
 }
-
-decode_results results;
 
 unsigned long speed = rover.max_speed;
 unsigned long last_cmd = 0;
@@ -24,7 +26,7 @@ void square(){
 }
 
 void loop(){
-  if(rover.ir_recv.decode(&results)){
+  if(ir_recv.decode(&results)){
     unsigned long cmd = ir_cmd::cmd_from_value(results.value);
     //Serial.println(cmd, HEX);
     switch(cmd){
@@ -75,7 +77,7 @@ void loop(){
     //TODO
     // use & 0xFF mask to get value
     // use right shift to check for repeat/repress
-    rover.ir_recv.resume();
+    ir_recv.resume();
   }
   //Serial.println(rover.range());
   /*

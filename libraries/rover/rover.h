@@ -1,9 +1,6 @@
 #ifndef rover_h
 #define rover_h
 
-#include <Ultrasonic.h>
-#include <IRremote.h>
-
 #define PIN_SPEED_2 5
 #define PIN_SPEED_1 6
 #define PIN_DIRECTION_2 7
@@ -17,15 +14,7 @@ class Rover{
     const static unsigned int third_speed = 85;
 
   public:
-    Ultrasonic ranger;
-    IRrecv ir_recv;
-
-  public:
-    Rover():ranger(12, 13), ir_recv(9){;}
-
-    long range(){
-      return ranger.Ranging(CM);
-    }
+    Rover(){;}
 
     void setup(){
       pinMode(PIN_SPEED_1, OUTPUT);
@@ -37,8 +26,6 @@ class Rover{
       analogWrite(PIN_SPEED_2, 0);
       digitalWrite(PIN_DIRECTION_1, LOW);
       digitalWrite(PIN_DIRECTION_2, LOW);
-
-      ir_recv.enableIRIn();
     }
 
     void forward(unsigned int speed){

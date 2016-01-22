@@ -22,9 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DEBUGUTILS_H
 #define DEBUGUTILS_H
 
-#ifdef DEBUG
+#ifdef DEBUG_OUTPUT
 #define DEBUG_INIT(speed) Serial.begin(speed);
 #define DEBUG_PRINT(str) Serial.print(str);
+#define DEBUG_PRINTLN(str) Serial.println(str);
 #define DEBUG_PRETTYPRINT(str)    \
   Serial.print(millis());     \
   Serial.print(": ");    \
@@ -38,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #else
 #define DEBUG_INIT(speed)
 #define DEBUG_PRINT(str)
+#define DEBUG_PRINTLN(str)
 #define DEBUG_PRETTYPRINT(str)
 #endif
 

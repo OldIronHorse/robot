@@ -12,21 +12,21 @@ void set_up() {
 }
 
 void test_no_obstruction(){
-  avoid.rover.mock_range = 35;
+  avoid.ranger.distance_cm = 35;
   avoid.loop();
   assertEqual("forward(255)", avoid.rover.calls.back());
 }
 
 void test_obstruction(){
-  avoid.rover.mock_range = 10;
+  avoid.ranger.distance_cm = 10;
   avoid.loop();
   assertEqual("back_curve(0, 255)", avoid.rover.calls.back());
 }
 
 void test_obstruction_cleared(){
-  avoid.rover.mock_range = 10;
+  avoid.ranger.distance_cm = 10;
   avoid.loop();
-  avoid.rover.mock_range = 135;
+  avoid.ranger.distance_cm = 135;
   avoid.loop();
   assertEqual("forward(255)", avoid.rover.calls.back());
 }

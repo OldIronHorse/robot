@@ -1,5 +1,7 @@
+#define DEBUG_OUTPUT
 #include <DebugUtils.h>
 #include <avoid.h>
+#include <Ultrasonic.h>
 
 //TODO: Interrupt-based range checking?
 // algorithm is setup, loop and callback function set
@@ -16,5 +18,6 @@ void setup(){
 
 void loop(){
   avoid.loop();
+  delay(100);
 }
 
