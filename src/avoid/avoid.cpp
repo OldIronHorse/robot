@@ -6,8 +6,6 @@
 //TODO: Interrupt-based range checking?
 // algorithm is setup, loop and callback function set
 // setup() configures iterrupts and callback is required
-// This looks a lot like a main.ino file...
-// So maybe no abstraction is required, just work with the arduino structure.
 
 void Avoid::enter_running(){
   state = running;
@@ -16,11 +14,16 @@ void Avoid::enter_running(){
 
 void Avoid::enter_obstructed(){
   state = obstructed;
-  rover.back_curve(0, rover.max_speed);
+  if(random(0, 2) > 0){
+    rover.back_curve(0, rover.max_speed);
+  }else{
+    rover.back_curve(rover.max_speed,0);
+  }
   delay(1000);
 }
 
 void Avoid::setup(){
+  randomSeed(analogRead(0));
   rover.setup();
   enter_running();
 }

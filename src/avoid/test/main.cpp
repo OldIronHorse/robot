@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <iostream>
 #include <algorithm>
-#include "testing.h"
+#include <testing.h>
+#include <Arduino.h>
 #include <rover.h>
 #include "../avoid.h"
 
-Avoid avoid;
+Rover rover;
+Avoid avoid(rover);
 
 void set_up() {
+  MockArduino::instance().reset();
   avoid.setup();
 }
 
@@ -17,13 +20,22 @@ void test_no_obstruction(){
   assertEqual("forward(255)", avoid.rover.calls.back());
 }
 
-void test_obstruction(){
+void test_obstruction_go_left(){
+  MockArduino::instance().random_values.push_back(1);
   avoid.ranger.distance_cm = 10;
   avoid.loop();
   assertEqual("back_curve(0, 255)", avoid.rover.calls.back());
 }
 
+void test_obstruction_go_right(){
+  MockArduino::instance().random_values.push_back(0);
+  avoid.ranger.distance_cm = 10;
+  avoid.loop();
+  assertEqual("back_curve(255, 0)", avoid.rover.calls.back());
+}
+
 void test_obstruction_cleared(){
+  MockArduino::instance().random_values.push_back(0);
   avoid.ranger.distance_cm = 10;
   avoid.loop();
   avoid.ranger.distance_cm = 135;
@@ -32,7 +44,8 @@ void test_obstruction_cleared(){
 }
 
 TestFunc tests[] = {&test_no_obstruction,
-                    &test_obstruction,
+                    &test_obstruction_go_left,
+                    &test_obstruction_go_right,
                     &test_obstruction_cleared,
                     0};
 

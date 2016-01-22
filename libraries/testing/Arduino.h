@@ -3,8 +3,7 @@
 #include <algorithm>
 #include <vector>
 #include <string>
-
-using namespace std;
+#include <list>
 
 class MockArduino {
 	public:
@@ -13,15 +12,18 @@ class MockArduino {
 
     void digitalWrite(int pin, int value);
     void analogWrite(int pin, int value);
+    int analogRead(int pin);
     void pinMode(int pin, int mode);
     void delayMicroseconds(int mu_sec);
+    long random_(int min, int max);
 
-    static string callPinMode(int pin, int mode);
-    static string callDigitalWrite(int pin, int value);
-    static string callAnalogWrite(int pin, int value);
-    static string callDelayMicroseconds(int mu_sec);
+    static std::string callPinMode(int pin, int mode);
+    static std::string callDigitalWrite(int pin, int value);
+    static std::string callAnalogWrite(int pin, int value);
+    static std::string callAnalogRead(int pin);
+    static std::string callDelayMicroseconds(int mu_sec);
 
-    void dumpCalls(ostream& os);
+    void dumpCalls(std::ostream& os);
 
 		int pin_out[14];
 		int pin_in[14];
@@ -29,7 +31,8 @@ class MockArduino {
 
     int millis;
 
-    vector<string> calls;
+    std::vector<std::string> calls;
+    std::list<long> random_values;
 
 	private:
 		MockArduino();
@@ -51,7 +54,12 @@ void pinMode(int pin, int mode);
 int digitalRead(int pin);
 void digitalWrite(int pin, int value);
 void analogWrite(int pin, int value);
+int analogRead(int pin);
 void delay(int m_sec);
 void delayMicroseconds(int mu_sec);
 int millis();
+long int random_(int min, int max);
+void randomSeed(int n);
 }
+
+#define random(a,b) random_(a,b)

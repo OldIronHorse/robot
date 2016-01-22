@@ -2,7 +2,7 @@
 #include <sstream>
 
 void Rover::reset(){
-  calls.empty();
+  calls.clear();
 }
 
 void Rover::setup(){

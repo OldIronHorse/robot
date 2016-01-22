@@ -1,6 +1,8 @@
 #include "Arduino.h"
 #include <sstream>
 
+using namespace std;
+
 MockArduino MockArduino::only_one;
 
 MockArduino::MockArduino() {
@@ -23,6 +25,12 @@ string MockArduino::callPinMode(int pin, int mode){
 string MockArduino::callDigitalWrite(int pin, int value){
   stringstream s;
   s << "digitalWrite(" << pin << ", " << value<< ")";
+  return s.str();
+}
+
+string MockArduino::callAnalogRead(int pin){
+  stringstream s;
+  s << "digitalRead(" << pin << ")";
   return s.str();
 }
 
@@ -66,6 +74,11 @@ void MockArduino::analogWrite(int pin, int value){
   calls.push_back(callAnalogWrite(pin, value));
 }
 
+int MockArduino::analogRead(int pin){
+  calls.push_back(callAnalogRead(pin));
+  return pin_in[pin];
+}
+
 void MockArduino::pinMode(int pin, int mode){
   pin_mode[pin] = mode;
   calls.push_back(callPinMode(pin, mode));
@@ -73,6 +86,18 @@ void MockArduino::pinMode(int pin, int mode){
 
 void MockArduino::delayMicroseconds(int mu_sec){
   calls.push_back(callDelayMicroseconds(mu_sec));
+}
+
+long MockArduino::random_(int min, int max){
+  stringstream s;
+  s << "random(" << min << ", " << max << ")";
+  calls.push_back(s.str());
+  if(random_values.empty()){
+    return min;
+  }
+  long value = random_values.front();
+  random_values.pop_front();
+  return value;
 }
 
 void pinMode(int pin, int mode) {
@@ -91,6 +116,10 @@ void analogWrite(int pin, int value) {
 	MockArduino::instance().analogWrite(pin, value);
 }
 
+int analogRead(int pin) {
+  return MockArduino::instance().analogRead(pin);
+}
+
 void delay(int u_sec) {
 }
 
@@ -101,3 +130,11 @@ void delayMicroseconds(int mu_sec) {
 int millis() {
   return MockArduino::instance().millis;
 }
+
+long random_(int min, int max){
+  return MockArduino::instance().random(min, max);
+}
+
+void randomSeed(int n){
+}
+
