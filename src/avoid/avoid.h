@@ -23,10 +23,10 @@ class Avoid{
 
   public: 
     Avoid(Rover &rover_):ranger(12, 13), rover(rover_){;}
-    void enter_running();
-    void enter_obstructed();
-    void setup();
-    void loop();
+    void enter_running(unsigned int speed);
+    void enter_obstructed(unsigned int speed);
+    void setup(unsigned int speed);
+    void loop(unsigned int speed);
 };
 
 #endif

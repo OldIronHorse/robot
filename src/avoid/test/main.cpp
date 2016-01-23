@@ -11,35 +11,35 @@ Avoid avoid(rover);
 
 void set_up() {
   MockArduino::instance().reset();
-  avoid.setup();
+  avoid.setup(10);
 }
 
 void test_no_obstruction(){
   avoid.ranger.distance_cm = 35;
-  avoid.loop();
-  assertEqual("forward(255)", avoid.rover.calls.back());
+  avoid.loop(200);
+  assertEqual("forward(10)", avoid.rover.calls.back());
 }
 
 void test_obstruction_go_left(){
   MockArduino::instance().random_values.push_back(1);
   avoid.ranger.distance_cm = 10;
-  avoid.loop();
-  assertEqual("back_curve(0, 255)", avoid.rover.calls.back());
+  avoid.loop(250);
+  assertEqual("back_curve(0, 250)", avoid.rover.calls.back());
 }
 
 void test_obstruction_go_right(){
   MockArduino::instance().random_values.push_back(0);
   avoid.ranger.distance_cm = 10;
-  avoid.loop();
-  assertEqual("back_curve(255, 0)", avoid.rover.calls.back());
+  avoid.loop(205);
+  assertEqual("back_curve(205, 0)", avoid.rover.calls.back());
 }
 
 void test_obstruction_cleared(){
   MockArduino::instance().random_values.push_back(0);
   avoid.ranger.distance_cm = 10;
-  avoid.loop();
+  avoid.loop(200);
   avoid.ranger.distance_cm = 135;
-  avoid.loop();
+  avoid.loop(255);
   assertEqual("forward(255)", avoid.rover.calls.back());
 }
 
