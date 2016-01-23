@@ -19,7 +19,7 @@ void Avoid::enter_obstructed(unsigned int speed){
   }else{
     rover.back_curve(speed, 0);
   }
-  delay(1000);
+  delay(500);
 }
 
 void Avoid::setup(unsigned int speed){
