@@ -1,10 +1,9 @@
 #define DEBUG_OUTPUT
 #include <DebugUtils.h>
-#include <Ultrasonic.h>
 #include <IRremote.h>
 #include <rover.h>
 #include "avoid.h"
-#include "ir_cmd.h"
+#include <ir_cmd.h>
 
 //TODO: Switchable modes (via IR remote)
 // - remote controlled via IR
