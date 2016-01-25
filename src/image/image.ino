@@ -5,6 +5,7 @@
 #include <ir_cmd.h>
 #include <Ultrasonic.h>
 #include <Servo.h>
+#include "image.h"
 
 Servo scanner;
 IRrecv ir_recv(9);
@@ -14,6 +15,12 @@ Ultrasonic ranger(12, 13);
 
 void right_10_degrees(){
   rover.right(Rover::max_speed);
+  delay(100);
+  rover.stop();
+}
+
+void left_10_degrees(){
+  rover.left(Rover::max_speed);
   delay(100);
   rover.stop();
 }
@@ -53,10 +60,25 @@ void loop(){
   DEBUG_PRINTLN("")
 #endif
   int index = max_index(90, ranges);
+  int heading = index*step;
   DEBUG_PRINT("Max range: ")
   DEBUG_PRINT(ranges[index])
   DEBUG_PRINT(" at ")
-  DEBUG_PRINT(index*step)
+  DEBUG_PRINT(heading)
+  if(heading > 90){
+    // turn right
+    int angle = heading - 90;
+    for(int turned = 0; turned < angle; turned += 10){
+      right_10_degrees();
+    }
+  }else if(heading < 90){
+    // turn left
+    int angle = 90 - heading;
+    for(int turned = 0; turned < angle; turned += 10){
+      right_10_degrees();
+    }
+  }
+  rover.forward(Rover::max_speed);
   /*
   if(ir_recv.decode(&ir_results)){
     DEBUG_PRINTLN("Got IR Command")
@@ -72,5 +94,5 @@ void loop(){
   }
   ir_recv.resume();
   */
-  delay(100);
+  delay(1000);
 }
