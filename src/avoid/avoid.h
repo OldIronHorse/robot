@@ -14,15 +14,16 @@ class Avoid{
     const static long min_range_cm = 30;
     const static long go_range_cm = 50;
 
-    Ultrasonic ranger;
+  private:
+    Ultrasonic &ranger;
     Rover &rover;
 
-  private:
     enum State {running, obstructed};
     State state;
 
   public: 
-    Avoid(Rover &rover_):ranger(12, 13), rover(rover_){;}
+    Avoid(Rover &rover_, Ultrasonic &ranger_)
+      :ranger(ranger_), rover(rover_){;}
     void enter_running(unsigned int speed);
     void enter_obstructed(unsigned int speed);
     void setup(unsigned int speed);

@@ -1,9 +1,11 @@
 #define DEBUG_OUTPUT
 #include <DebugUtils.h>
 #include <IRremote.h>
+#include <Servo.h>
 #include <rover.h>
-#include "avoid.h"
 #include <ir_cmd.h>
+#include "avoid.h"
+#include "scan.h"
 
 //TODO: Switchable modes (via IR remote)
 // - remote controlled via IR
@@ -11,18 +13,24 @@
 //  - various modes and strategies?
 //    - control parameters via IR remote?
 
+Servo scanner;
 Rover rover;
-Avoid avoid(rover);
+Ultrasonic ranger(12, 13);
+Avoid avoid(rover, ranger);
+Scan scan(rover, ranger, scanner);
 IRrecv ir_recv(9);
 decode_results results;
-enum Mode {REMOTE, AUTO};
+enum Mode {REMOTE, AVOID, SCAN};
 Mode mode;
 unsigned int speed = Rover::max_speed;
 unsigned int last_cmd = ir_cmd::none;
 
 void setup(){
   DEBUG_INIT(9600)
+  scanner.attach(10);
+  rover.setup();
   avoid.setup(speed);
+  scan.setup(speed);
   ir_recv.enableIRIn();
   mode = REMOTE;
   rover.stop();
@@ -39,12 +47,16 @@ void loop(){
         rover.stop();
         break;
       case ir_cmd::d2:
-        mode = AUTO;
+        mode = AVOID;
+        scanner.write(90);
         rover.forward(speed);
+        break;
+      case ir_cmd::d3:
+        mode = SCAN;
         break;
       case ir_cmd::vol_up:
         speed = min(speed + 5, Rover::max_speed);
-        if(AUTO == mode){
+        if(AVOID == mode){
           avoid.enter_running(speed);
         }else{
           cmd = last_cmd;
@@ -52,7 +64,7 @@ void loop(){
         break;
       case ir_cmd::vol_down:
         speed = max(5, speed - 5);
-        if(AUTO == mode){
+        if(AVOID == mode){
           avoid.enter_running(speed);
         }else{
           cmd = last_cmd;
@@ -61,7 +73,10 @@ void loop(){
     }
   }
   switch(mode){
-    case AUTO:
+    case SCAN:
+      scan.loop(speed);
+      break;
+    case AVOID:
       avoid.loop(speed);
       break;
     case REMOTE:

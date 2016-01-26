@@ -1,4 +1,6 @@
 // Mock Arduino header file
+#ifndef Arduino_h
+#define Arduino_h
 #include <cmath>
 #include <algorithm>
 #include <vector>
@@ -63,3 +65,4 @@ void randomSeed(int n);
 }
 
 #define random(a,b) random_(a,b)
+#endif

@@ -9,6 +9,18 @@ void Rover::setup(){
   reset();
 }
 
+void Rover::stop(){
+  calls.push_back("stop()");
+}
+
+void Rover::turn_right_10(){
+  calls.push_back("turn_right_10()");
+}
+
+void Rover::turn_left_10(){
+  calls.push_back("turn_left_10()");
+}
+
 void Rover::forward(unsigned int speed){
   stringstream s;
   s << "forward(" << speed << ")";

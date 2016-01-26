@@ -17,6 +17,7 @@ void right_10_degrees(){
   rover.right(Rover::max_speed);
   delay(100);
   rover.stop();
+  delay(100);
 }
 
 void left_10_degrees(){
@@ -44,38 +45,41 @@ void scan(int step, int *ranges){
   }
 }
 
-int ranges[90];
-const int step = 2;
+int ranges[18];
+const int step = 10;
 
 void loop(){
+  rover.stop();
   scan(step, ranges);
 #ifdef DEBUG_OUTPUT
   DEBUG_PRINTLN("Ranges:")
-  for(int i = 0; i < 36; ++i){
-    DEBUG_PRINT(i*2)
+  for(int i = 0; i < 18; ++i){
+    DEBUG_PRINT(i*step)
     DEBUG_PRINT(":")
     DEBUG_PRINT(ranges[i])
     DEBUG_PRINT(", ")
   }
   DEBUG_PRINTLN("")
 #endif
-  int index = max_index(90, ranges);
+  int index = max_index(18, ranges);
   int heading = index*step;
   DEBUG_PRINT("Max range: ")
   DEBUG_PRINT(ranges[index])
   DEBUG_PRINT(" at ")
-  DEBUG_PRINT(heading)
+  DEBUG_PRINTLN(heading)
   if(heading > 90){
     // turn right
+    DEBUG_PRINTLN("Turning right...")
     int angle = heading - 90;
     for(int turned = 0; turned < angle; turned += 10){
       right_10_degrees();
     }
   }else if(heading < 90){
     // turn left
+    DEBUG_PRINTLN("Turning left...")
     int angle = 90 - heading;
     for(int turned = 0; turned < angle; turned += 10){
-      right_10_degrees();
+      left_10_degrees();
     }
   }
   rover.forward(Rover::max_speed);

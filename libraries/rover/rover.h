@@ -73,6 +73,20 @@ class Rover{
       analogWrite(PIN_SPEED_1, speed);
       analogWrite(PIN_SPEED_2, speed);
     }
+
+    void turn_right_10(){
+      right(max_speed);
+      delay(100);
+      stop();
+      delay(100);
+    }
+
+    void turn_left_10(){
+      left(max_speed);
+      delay(100);
+      stop();
+      delay(100);
+    }
 };
 
 #endif

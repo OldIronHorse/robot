@@ -1,3 +1,5 @@
+#ifndef Servo_h
+#define Servo_h
 #include <list>
 
 class Servo {
@@ -11,9 +13,6 @@ class Servo {
 
     int readMicroseconds();
 
-    static Servo* by_pin(int pin);
-    static std::list<Servo*> inventory;
-
     int m_pin;
     int m_min;
     int m_max;
@@ -23,3 +22,4 @@ class Servo {
 
     std::list<int> musec_calls;
 };
+#endif

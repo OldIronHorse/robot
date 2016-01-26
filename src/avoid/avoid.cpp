@@ -24,7 +24,6 @@ void Avoid::enter_obstructed(unsigned int speed){
 
 void Avoid::setup(unsigned int speed){
   randomSeed(analogRead(0));
-  rover.setup();
   enter_running(speed);
 }
 
