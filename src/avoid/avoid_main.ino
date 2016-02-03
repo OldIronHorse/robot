@@ -53,6 +53,7 @@ void loop(){
         break;
       case ir_cmd::d3:
         mode = SCAN;
+        scan.start(speed);
         break;
       case ir_cmd::vol_up:
         speed = min(speed + 5, Rover::max_speed);
