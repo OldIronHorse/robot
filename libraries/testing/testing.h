@@ -2,6 +2,10 @@
 #include <sstream>
 #include <algorithm>
 
+#define DEFINE_TEST(name) \
+void name(){ \
+  cout << "Begin Test: " << #name << endl;
+
 typedef void (*TestFunc)(void); 
 
 using namespace std;

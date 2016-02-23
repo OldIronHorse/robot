@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <iostream>
 #include <algorithm>
 #include <testing.h>
 #include <Arduino.h>
@@ -7,9 +6,6 @@
 #include <rover.h>
 #include "../avoid.h"
 #include "../scan.h"
-
-#define BEGIN_TEST(name) \
-  cout << "Begin Test: " << name << endl;
 
 Rover rover;
 Ultrasonic ranger(12, 13);
@@ -25,31 +21,27 @@ void set_up() {
 }
 
 //Avoid
-void test_no_obstruction(){
-  BEGIN_TEST("test_no_obstruction")
+DEFINE_TEST(test_no_obstruction)
   ranger.distance_cm = 35;
   avoid.loop(200);
   assertEqual("forward(10)", rover.calls.back());
 }
 
-void test_obstruction_go_left(){
-  BEGIN_TEST("test_obstruction_go_left")
+DEFINE_TEST(test_obstruction_go_left)
   MockArduino::instance().random_values.push_back(1);
   ranger.distance_cm = 10;
   avoid.loop(250);
   assertEqual("back_curve(0, 250)", rover.calls.back());
 }
 
-void test_obstruction_go_right(){
-  BEGIN_TEST("test_obstruction_go_right")
+DEFINE_TEST(test_obstruction_go_right)
   MockArduino::instance().random_values.push_back(0);
   ranger.distance_cm = 10;
   avoid.loop(205);
   assertEqual("back_curve(205, 0)", rover.calls.back());
 }
 
-void test_obstruction_cleared(){
-  BEGIN_TEST("test_obstruction_cleared")
+DEFINE_TEST(test_obstruction_cleared)
   MockArduino::instance().random_values.push_back(0);
   ranger.distance_cm = 10;
   avoid.loop(200);
@@ -59,16 +51,14 @@ void test_obstruction_cleared(){
 }
 
 //Scan
-void test_scan_start_no_obstruction(){
-  BEGIN_TEST("test_scan_start_no_obstruction")
+DEFINE_TEST(test_scan_start_no_obstruction)
   ranger.distance_cm = 50;
   scan.start(100);
   assertEqual(90, scanner.m_angle);
   assertEqual("forward(100)", rover.calls.back());
 }
 
-void test_scan_no_obstruction(){
-  BEGIN_TEST("test_scan_no_obstruction")
+DEFINE_TEST(test_scan_no_obstruction)
   ranger.distance_cm = 50;
   scan.start(100);
   scan.loop(100);
