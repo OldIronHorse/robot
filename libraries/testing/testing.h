@@ -6,6 +6,10 @@
 void name(){ \
   cout << "Begin Test: " << #name << endl;
 
+#define BEGIN_TEST_SUITE(name) TestFunc name[] = {
+#define ADD_TEST(name) &name,
+#define END_TEST_SUITE 0};
+
 typedef void (*TestFunc)(void); 
 
 using namespace std;
