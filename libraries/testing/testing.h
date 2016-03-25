@@ -2,6 +2,14 @@
 #include <sstream>
 #include <algorithm>
 
+#define DEFINE_TEST(name) \
+void name(){ \
+  cout << "Running Test: " << #name << endl;
+
+#define BEGIN_TEST_SUITE(name) TestFunc name[] = {
+#define ADD_TEST(test_func) &test_func,
+#define END_TEST_SUITE 0};
+
 typedef void (*TestFunc)(void); 
 
 using namespace std;
