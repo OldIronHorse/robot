@@ -17,7 +17,7 @@ class MockArduino {
     int analogRead(int pin);
     void pinMode(int pin, int mode);
     void delayMicroseconds(int mu_sec);
-    long random_(int min, int max);
+    long random(int min, int max);
 
     static std::string callPinMode(int pin, int mode);
     static std::string callDigitalWrite(int pin, int value);
@@ -64,5 +64,5 @@ long int random_(int min, int max);
 void randomSeed(int n);
 }
 
-#define random(a,b) random_(a,b)
+//#define random(a,b) random_(a,b)
 #endif

@@ -88,7 +88,7 @@ void MockArduino::delayMicroseconds(int mu_sec){
   calls.push_back(callDelayMicroseconds(mu_sec));
 }
 
-long MockArduino::random_(int min, int max){
+long MockArduino::random(int min, int max){
   stringstream s;
   s << "random(" << min << ", " << max << ")";
   calls.push_back(s.str());
