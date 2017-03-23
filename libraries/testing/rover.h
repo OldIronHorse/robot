@@ -16,6 +16,9 @@ class Rover{
     void setup();
     void stop();
     void forward(unsigned int speed);
+    void back(unsigned int speed);
+    void right(unsigned int speed);
+    void left(unsigned int speed);
     void back_curve(unsigned int left_speed, unsigned int right_speed);
     void turn_right_10();
     void turn_left_10();

@@ -8,19 +8,19 @@ int run(TestFunc tests[], void (*setup)(void), void (*teardown)(void)) {
 	int failed = 0;
 
   for(int n = 0; tests[n] != 0; ++n) {
+    if(setup != 0) {
+      setup();
+    }
     try {
-			if(setup != 0) {
-				setup();
-			}
       tests[n]();
       passed++;
-			if(teardown != 0) {
-				teardown();
-			}
     }
     catch(TestFailedException &e) {
       failed++;
       cout << "FAILED: " << e.file << "[" << e.line << "] " << e.func << ": " << e.msg << endl; 
+    }
+    if(teardown != 0) {
+      teardown();
     }
   }
 

@@ -21,7 +21,6 @@ class Rover{
       pinMode(PIN_SPEED_2, OUTPUT);
       pinMode(PIN_DIRECTION_1, OUTPUT);
       pinMode(PIN_DIRECTION_2, OUTPUT);
-
       analogWrite(PIN_SPEED_1, 0);
       analogWrite(PIN_SPEED_2, 0);
       digitalWrite(PIN_DIRECTION_1, LOW);
