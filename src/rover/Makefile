@@ -1,6 +1,7 @@
 BOARD_TAG=uno
 ARDUINO_PORT=/dev/ttyACM*
 ARDUINO_LIBS=rover
+TEST__LIBS=rover
 USER_LIB_PATH=../../libraries
 OS := $(shell uname)
 ifeq ($(OS), Darwin)
