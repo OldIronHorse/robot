@@ -139,3 +139,22 @@ long random_(int min, int max){
 void randomSeed(int n){
 }
 
+MockSerial Serial;
+
+MockSerial::MockSerial()
+:_speed(0)
+{;}
+
+void MockSerial::start(int speed){
+  _speed = speed;
+  _buffer = "";
+};
+
+void MockSerial::print(char c){
+  _buffer.push_back(c);
+}
+
+void MockSerial::println(const char *szText){
+  _buffer.append(szText);
+}
+

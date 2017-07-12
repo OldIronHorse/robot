@@ -44,8 +44,24 @@ class MockArduino {
 		static MockArduino only_one;
 };
 
-extern "C"{
+class MockSerial{
+  public:
+    MockSerial();
 
+    void start(int speed);
+    void print(char c);
+    void println(const char* szText);
+
+    int _speed;
+    std::string _buffer;
+};
+
+extern MockSerial Serial;
+
+void setup(void);
+void loop(void);
+
+extern "C"{
 #define HIGH 0x1
 #define LOW  0x0
 
