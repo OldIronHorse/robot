@@ -44,16 +44,31 @@ class MockArduino {
 		static MockArduino only_one;
 };
 
+#define DEC 10
+#define HEX 16
+#define OCT 8
+#define BIN 2
+
 class MockSerial{
   public:
     MockSerial();
 
     void begin(int speed);
+    void end();
     void print(char c);
+    void print(const char *szText);
+    void print(int n, int base = DEC);
+    void print(double d, int dp = 2);
+    void println(char c);
     void println(const char* szText);
+    void println(int n, int base = DEC);
+    void println(double d, int dp = 2);
     int available();
     int read();
+    int peek();
+    void flush(){;}
 
+    bool _ready;
     int _speed;
     std::string _out_buffer;
     std::string _in_buffer;

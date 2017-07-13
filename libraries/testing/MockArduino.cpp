@@ -142,25 +142,93 @@ void randomSeed(int n){
 MockSerial Serial;
 
 MockSerial::MockSerial()
-:_speed(0)
+:_speed(0), _ready(false)
 {;}
 
 void MockSerial::begin(int speed){
   _speed = speed;
   _in_buffer = "";
   _out_buffer = "";
+  _ready = true;
 };
 
+void MockSerial::end(){
+  _ready = false;
+}
+
 void MockSerial::print(char c){
-  _out_buffer.push_back(c);
+  if(_ready){
+    _out_buffer.push_back(c);
+  }
+}
+
+void MockSerial::println(char c){
+  if(_ready){
+    _out_buffer.push_back(c);
+    _out_buffer.push_back('\n');
+  }
+}
+
+void MockSerial::print(const char *szText){
+  if(_ready){
+    _out_buffer.append(szText);
+  }
 }
 
 void MockSerial::println(const char *szText){
-  _out_buffer.append(szText);
+  if(_ready){
+    _out_buffer.append(szText);
+    _out_buffer.push_back('\n');
+  }
+}
+
+void MockSerial::println(double d, int dp){
+  if(_ready){
+    print(d,dp);
+    _out_buffer.push_back('\n');
+  }
+}
+
+void MockSerial::print(double d, int dp){
+  if(_ready){
+    std::stringstream ss;
+    ss.precision(dp);
+    ss << std::fixed << d;
+    _out_buffer.append(ss.str());
+  }
+}
+
+void MockSerial::println(int n, int base){
+  if(_ready){
+    print(n,base);
+    _out_buffer.push_back('\n');
+  }
+}
+
+void MockSerial::print(int n, int base){
+  if(_ready){
+    if(2 == base){ 
+      std::string str(std::bitset< 64 >(n).to_string());
+      str.erase(0, min(str.find_first_not_of('0'), str.size()-1));
+      _out_buffer.append(str);
+    }else{
+      std::stringstream ss;
+      switch(base){
+        case 16:
+          ss << std::uppercase << std::hex;
+          break;
+        case 8:
+          ss << std::oct;
+          break;
+      }
+      ss << n;
+      _out_buffer.append(ss.str());
+    }
+  }
 }
 
 int MockSerial::read(){
-  if(_in_buffer.empty()){
+  if(!_ready || _in_buffer.empty()){
     return -1;
   }else{
     char c = _in_buffer.front();
@@ -169,6 +237,18 @@ int MockSerial::read(){
   }
 }
 
+int MockSerial::peek(){
+  if(!_ready || _in_buffer.empty()){
+    return -1;
+  }else{
+    return _in_buffer.front();
+  }
+}
+
 int MockSerial::available(){
-  return _in_buffer.length();
+  if(_ready){
+    return _in_buffer.length();
+  }else{
+    return -1;
+  }
 }
