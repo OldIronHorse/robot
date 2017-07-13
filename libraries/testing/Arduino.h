@@ -51,9 +51,11 @@ class MockSerial{
     void start(int speed);
     void print(char c);
     void println(const char* szText);
+    int read();
 
     int _speed;
-    std::string _buffer;
+    std::string _out_buffer;
+    std::string _in_buffer;
 };
 
 extern MockSerial Serial;

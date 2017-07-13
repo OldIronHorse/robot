@@ -147,14 +147,24 @@ MockSerial::MockSerial()
 
 void MockSerial::start(int speed){
   _speed = speed;
-  _buffer = "";
+  _in_buffer = "";
+  _out_buffer = "";
 };
 
 void MockSerial::print(char c){
-  _buffer.push_back(c);
+  _out_buffer.push_back(c);
 }
 
 void MockSerial::println(const char *szText){
-  _buffer.append(szText);
+  _out_buffer.append(szText);
 }
 
+int MockSerial::read(){
+  if(_in_buffer.empty()){
+    return -1;
+  }else{
+    char c = _in_buffer.front();
+    _in_buffer.erase(0,1);
+    return c;
+  }
+}
