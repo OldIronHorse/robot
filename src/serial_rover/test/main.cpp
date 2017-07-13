@@ -1,6 +1,7 @@
 #include <testing.h>
 #include <Arduino.h>
 #include "../SerialRover.h"
+#include "../Commands.h"
 
 SerialRover rover;
 
@@ -31,6 +32,11 @@ DEFINE_TEST(setup_init_and_read_loop)
   assertEqual("LHL", Serial._in_buffer);
   assertEqual(LOW, MockArduino::instance().pin_out[7]);
 }
+
+TestFunc tests[] = {&setup_and_init,
+                    &setup_init_and_loop,
+                    &setup_init_and_read_loop,
+                    0};
 
 void setup_format(){
   Serial.begin(9600);
@@ -147,11 +153,6 @@ DEFINE_TEST(serial_println_4dp)
   assertEqual("1.2346\n", Serial._out_buffer);
 }
 
-TestFunc tests[] = {&setup_and_init,
-                    &setup_init_and_loop,
-                    &setup_init_and_read_loop,
-                    0};
-
 TestFunc print_tests[] = {&serial_print_integer,
                           &serial_print_decimal,
                           &serial_print_char,
@@ -178,6 +179,31 @@ TestFunc println_tests[] = {&serial_println_integer,
                             &serial_println_4dp,
                             0};
 
+Commands cmds;
+
+void setup_commands(){
+  cmds.init(9600);
+}
+
+void teardown_commands(){
+  Serial._out_buffer.clear();
+  Serial._in_buffer.clear();
+}
+
+DEFINE_TEST(forward_100)
+  Serial._in_buffer = "FWD:100\n";
+  cmds.read();
+  assertEqual(Commands::FWD,cmds._verb);
+  assertEqual(100,cmds._arg);
+}
+
+BEGIN_TEST_SUITE(commands_tests)
+ADD_TEST(forward_100)
+END_TEST_SUITE
+
 int main(void) {
-  return run(tests, set_up) + run(print_tests, setup_format) + run(println_tests, setup_format);
+  return run(tests, set_up) + 
+         run(print_tests, setup_format) + 
+         run(println_tests, setup_format) +
+         run(commands_tests, setup_commands, teardown_commands);
 }
