@@ -5,7 +5,7 @@ SerialRover::SerialRover():_c('A'),_light(LOW)
 {;}
 
 void SerialRover::init(){
-  Serial.start(9600);
+  Serial.begin(9600);
   Serial.println("Started...\n");
   pinMode(13, OUTPUT);
   pinMode(7, OUTPUT);
@@ -27,13 +27,15 @@ void SerialRover::loop(){
 }
 
 void SerialRover::read_loop(){
-  int c = Serial.read();
-  switch(c){
-    case 'H':
-      digitalWrite(7,HIGH);
-      break;
-    case 'L':
-      digitalWrite(7,LOW);
-      break;
+  if(Serial.available() > 0){
+    int c = Serial.read();
+    switch(c){
+      case 'H':
+        digitalWrite(7,HIGH);
+        break;
+      case 'L':
+        digitalWrite(7,LOW);
+        break;
+    }
   }
 }

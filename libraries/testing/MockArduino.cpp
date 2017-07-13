@@ -145,7 +145,7 @@ MockSerial::MockSerial()
 :_speed(0)
 {;}
 
-void MockSerial::start(int speed){
+void MockSerial::begin(int speed){
   _speed = speed;
   _in_buffer = "";
   _out_buffer = "";
@@ -167,4 +167,8 @@ int MockSerial::read(){
     _in_buffer.erase(0,1);
     return c;
   }
+}
+
+int MockSerial::available(){
+  return _in_buffer.length();
 }

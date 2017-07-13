@@ -48,9 +48,10 @@ class MockSerial{
   public:
     MockSerial();
 
-    void start(int speed);
+    void begin(int speed);
     void print(char c);
     void println(const char* szText);
+    int available();
     int read();
 
     int _speed;
