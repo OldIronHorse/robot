@@ -6,7 +6,7 @@ SerialRover::SerialRover():_c('A'),_light(LOW)
 
 void SerialRover::init(){
   Serial.begin(9600);
-  Serial.println("Started...\n");
+  Serial.println("Started...");
   pinMode(13, OUTPUT);
   pinMode(7, OUTPUT);
 }
