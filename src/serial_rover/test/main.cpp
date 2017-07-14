@@ -190,15 +190,76 @@ void teardown_commands(){
   Serial._in_buffer.clear();
 }
 
-DEFINE_TEST(forward_100)
-  Serial._in_buffer = "FWD:100\n";
-  cmds.read();
-  assertEqual(Commands::FWD,cmds._verb);
-  assertEqual(100,cmds._arg);
+DEFINE_TEST(forward)
+  Serial._in_buffer = "FWD\n";
+  while(Serial.available() > 0 && cmds._verb == Commands::NONE){
+    cmds.read();
+  }
+  assertEqual(Commands::FORWARD,cmds._verb);
+}
+
+DEFINE_TEST(backward)
+  Serial._in_buffer = "BWD\n";
+  while(Serial.available() > 0 && cmds._verb == Commands::NONE){
+    cmds.read();
+  }
+  assertEqual(Commands::BACKWARD,cmds._verb);
+}
+
+DEFINE_TEST(right)
+  Serial._in_buffer = "RT\n";
+  while(Serial.available() > 0 && cmds._verb == Commands::NONE){
+    cmds.read();
+  }
+  assertEqual(Commands::RIGHT,cmds._verb);
+}
+
+DEFINE_TEST(left)
+  Serial._in_buffer = "LT\n";
+  while(Serial.available() > 0 && cmds._verb == Commands::NONE){
+    cmds.read();
+  }
+  assertEqual(Commands::LEFT,cmds._verb);
+}
+
+DEFINE_TEST(stop)
+  Serial._in_buffer = "STP\n";
+  while(Serial.available() > 0 && cmds._verb == Commands::NONE){
+    cmds.read();
+  }
+  assertEqual(Commands::STOP,cmds._verb);
+}
+
+DEFINE_TEST(multiple_commands)
+  Serial._in_buffer = "FWD\nLT\nBWD\nRT\nSTP\n";
+  while(Serial.available() > 0 && cmds._verb == Commands::NONE){
+    cmds.read();
+  }
+  assertEqual(Commands::FORWARD,cmds._verb);
+  while(Serial.available() > 0 && cmds._verb == Commands::NONE){
+    cmds.read();
+  }
+  assertEqual(Commands::LEFT,cmds._verb);
+  while(Serial.available() > 0 && cmds._verb == Commands::NONE){
+    cmds.read();
+  }
+  assertEqual(Commands::BACKWARD,cmds._verb);
+  while(Serial.available() > 0 && cmds._verb == Commands::NONE){
+    cmds.read();
+  }
+  assertEqual(Commands::RIGHT,cmds._verb);
+  while(Serial.available() > 0 && cmds._verb == Commands::NONE){
+    cmds.read();
+  }
+  assertEqual(Commands::STOP,cmds._verb);
 }
 
 BEGIN_TEST_SUITE(commands_tests)
-ADD_TEST(forward_100)
+ADD_TEST(forward)
+ADD_TEST(backward)
+ADD_TEST(right)
+ADD_TEST(left)
+ADD_TEST(stop)
 END_TEST_SUITE
 
 int main(void) {
