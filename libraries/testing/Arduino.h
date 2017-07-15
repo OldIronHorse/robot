@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <list>
+#include <string.h>
 
 class MockArduino {
 	public:

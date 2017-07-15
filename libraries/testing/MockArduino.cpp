@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include <sstream>
 #include <iostream>
+#include <bitset>
 
 using namespace std;
 
