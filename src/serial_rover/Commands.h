@@ -2,7 +2,7 @@
 
 class Commands{
   public:
-    enum Verb {NONE, FORWARD, BACKWARD, RIGHT, LEFT, STOP};
+    enum Verb {NONE, FORWARD, BACKWARD, RIGHT, LEFT, STOP, SCAN};
     
     void init(int speed);
     void read();

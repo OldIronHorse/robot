@@ -190,6 +190,14 @@ void teardown_commands(){
   Serial._in_buffer.clear();
 }
 
+DEFINE_TEST(scan)
+  Serial._in_buffer = "SCN\n";
+  while(Serial.available() > 0 && cmds._verb == Commands::NONE){
+    cmds.read();
+  }
+  assertEqual(Commands::SCAN,cmds._verb);
+}
+
 DEFINE_TEST(forward)
   Serial._in_buffer = "FWD\n";
   while(Serial.available() > 0 && cmds._verb == Commands::NONE){
@@ -260,6 +268,7 @@ ADD_TEST(backward)
 ADD_TEST(right)
 ADD_TEST(left)
 ADD_TEST(stop)
+ADD_TEST(scan)
 END_TEST_SUITE
 
 int main(void) {

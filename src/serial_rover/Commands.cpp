@@ -10,6 +10,7 @@ void Commands::init(int speed){
 void Commands::read(){
   if(Serial.available() > 0){
     char c = Serial.read();
+    Serial.print(c);
     if('\n' == c){
       // Command complete
       // TODO parse buffer
@@ -23,6 +24,8 @@ void Commands::read(){
         _verb = LEFT;
       }else if(0 == strncmp("STP",_cmd_buffer,3)){
         _verb = STOP;
+      }else if(0 == strncmp("SCN",_cmd_buffer,2)){
+        _verb = SCAN;
       }
       _cmd_buffer_next = 0;
     }else if(_cmd_buffer_next < CMD_BUFFER_LENGTH){
