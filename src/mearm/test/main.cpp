@@ -1,12 +1,13 @@
 #include <testing.h>
 #include <Arduino.h>
 #include "../mearm.h"
+#include "../cmdarm.h"
 
 Mearm arm;
+CmdArm arm_cmd(arm);
 
 void setup_arm() {
   MockArduino::instance().reset();
-  Serial.begin(9600);
   arm.attach(3,5,6,9);
 }
 
@@ -67,6 +68,23 @@ DEFINE_TEST(move_to)
   assertEqual(0,arm._servos[Mearm::GRIPPER].m_angle);
 }
 
+void setup_serial(){
+  setup_coordinated();
+  Serial.begin(9600);
+}
+
+DEFINE_TEST(cmd_move_to)
+  Serial._in_buffer = "MT:135:010:120:C\n";
+  while(!Serial._in_buffer.empty() || arm.is_moving()){
+    arm_cmd.read();
+    arm.move();
+  }
+  assertEqual(135,arm._servos[Mearm::PAN].m_angle);
+  assertEqual(10,arm._servos[Mearm::SHOULDER].m_angle);
+  assertEqual(120,arm._servos[Mearm::ELBOW].m_angle);
+  assertEqual(0,arm._servos[Mearm::GRIPPER].m_angle);
+}
+
 BEGIN_TEST_SUITE(arm_dof)
 ADD_TEST(gripper)
 ADD_TEST(elbow)
@@ -79,6 +97,12 @@ BEGIN_TEST_SUITE(coordinated_movement)
 ADD_TEST(move_to)
 END_TEST_SUITE
 
+BEGIN_TEST_SUITE(arm_serial_commands)
+ADD_TEST(cmd_move_to)
+END_TEST_SUITE
+
 int main(void) {
-  return run(arm_dof,setup_arm) + run(coordinated_movement, setup_coordinated);
+  return run(arm_dof, setup_arm) + 
+         run(coordinated_movement, setup_coordinated) +
+         run(arm_serial_commands, setup_serial);
 }

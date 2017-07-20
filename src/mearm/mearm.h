@@ -1,3 +1,5 @@
+#ifndef mearm_h
+#define mearm_h
 #include <Servo.h>
 
 class Mearm{
@@ -27,3 +29,4 @@ class Mearm{
     int _step;
     int _step_count;
 };
+#endif
