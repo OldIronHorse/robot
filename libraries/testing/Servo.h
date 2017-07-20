@@ -10,6 +10,7 @@ class Servo {
     void attach(int pin, int min=544, int max=2400);
     void write(int angle);
     void writeMicroseconds(int mu_sec);
+    int read();
 
     int readMicroseconds();
 

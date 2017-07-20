@@ -25,6 +25,10 @@ void Servo::writeMicroseconds(int mu_sec) {
   musec_calls.push_back(mu_sec);
 }
 
+int Servo::read(){
+  return m_angle;
+}
+
 int Servo::readMicroseconds() {
   return m_mu_sec;
 }

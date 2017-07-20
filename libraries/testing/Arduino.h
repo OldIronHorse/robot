@@ -8,6 +8,7 @@
 #include <string>
 #include <list>
 #include <string.h>
+#include <iostream>
 
 class MockArduino {
 	public:
@@ -100,5 +101,9 @@ long int random_(int min, int max);
 void randomSeed(int n);
 }
 
+template<class T>
+T max(T a, T b){
+  return ((a)>(b)?(a):(b));
+}
 #define random(a,b) random_(a,b)
 #endif
