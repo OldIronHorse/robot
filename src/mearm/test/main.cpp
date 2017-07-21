@@ -85,6 +85,54 @@ DEFINE_TEST(cmd_move_to)
   assertEqual(0,arm._servos[Mearm::GRIPPER].m_angle);
 }
 
+DEFINE_TEST(cmd_unknown)
+  Serial._in_buffer = "X:135:010:120:C\n";
+  while(!Serial._in_buffer.empty() || arm.is_moving()){
+    arm_cmd.read();
+    arm.move();
+  }
+  assertEqual(90,arm._servos[Mearm::PAN].m_angle);
+  assertEqual(90,arm._servos[Mearm::SHOULDER].m_angle);
+  assertEqual(90,arm._servos[Mearm::ELBOW].m_angle);
+  assertEqual(90,arm._servos[Mearm::GRIPPER].m_angle);
+}
+
+DEFINE_TEST(cmd_no_command)
+  Serial._in_buffer = "135\n";
+  while(!Serial._in_buffer.empty() || arm.is_moving()){
+    arm_cmd.read();
+    arm.move();
+  }
+  assertEqual(90,arm._servos[Mearm::PAN].m_angle);
+  assertEqual(90,arm._servos[Mearm::SHOULDER].m_angle);
+  assertEqual(90,arm._servos[Mearm::ELBOW].m_angle);
+  assertEqual(90,arm._servos[Mearm::GRIPPER].m_angle);
+}
+
+DEFINE_TEST(cmd_move_to_malformed)
+  Serial._in_buffer = "M:1354010:120:C\n";
+  while(!Serial._in_buffer.empty() || arm.is_moving()){
+    arm_cmd.read();
+    arm.move();
+  }
+  assertEqual(90,arm._servos[Mearm::PAN].m_angle);
+  assertEqual(90,arm._servos[Mearm::SHOULDER].m_angle);
+  assertEqual(90,arm._servos[Mearm::ELBOW].m_angle);
+  assertEqual(90,arm._servos[Mearm::GRIPPER].m_angle);
+}
+
+DEFINE_TEST(cmd_too_long)
+  Serial._in_buffer = "M:123456789012345678901234566789\n";
+  while(!Serial._in_buffer.empty() || arm.is_moving()){
+    arm_cmd.read();
+    arm.move();
+  }
+  assertEqual(90,arm._servos[Mearm::PAN].m_angle);
+  assertEqual(90,arm._servos[Mearm::SHOULDER].m_angle);
+  assertEqual(90,arm._servos[Mearm::ELBOW].m_angle);
+  assertEqual(90,arm._servos[Mearm::GRIPPER].m_angle);
+}
+
 BEGIN_TEST_SUITE(arm_dof)
 ADD_TEST(gripper)
 ADD_TEST(elbow)
@@ -99,6 +147,10 @@ END_TEST_SUITE
 
 BEGIN_TEST_SUITE(arm_serial_commands)
 ADD_TEST(cmd_move_to)
+ADD_TEST(cmd_unknown)
+ADD_TEST(cmd_no_command)
+ADD_TEST(cmd_move_to_malformed)
+ADD_TEST(cmd_too_long)
 END_TEST_SUITE
 
 int main(void) {

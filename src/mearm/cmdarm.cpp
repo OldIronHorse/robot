@@ -1,25 +1,30 @@
 #include "cmdarm.h"
 
 CmdArm::CmdArm(Mearm &arm)
-:_arm(arm){;}
+:_arm(arm){
+  memset(_cmd, 0, MAX_CMD_LEN);
+}
 
 void CmdArm::read(){
   if(Serial.available() > 0){
     char c = Serial.read();
     if('\n' == c){
-      //TODO: parse command
-      switch(_cmd[0]){
-        case 'M':
-          //M:nnn:nnn:nnn:c
-          bool gripper = (_cmd[14] == 'O');
-          _cmd[5] = 0;
-          _cmd[9] = 0;
-          _cmd[13] = 0;
-          int pan = atoi(&_cmd[2]);
-          int shoulder = atoi(&_cmd[6]);
-          int elbow = atoi(&_cmd[10]);
-          _arm.move_to(pan, shoulder, elbow, gripper);
-          break;
+      const char* verb = strtok(_cmd, ":");
+      if(NULL != verb){
+        if(0 == strcmp(verb, "M")){
+          //M:nnn:nnn:nnn:[C|O]
+          const char* szPan = strtok(NULL, ":");
+          const char* szShoulder= strtok(NULL, ":");
+          const char* szElbow = strtok(NULL, ":");
+          const char* szGripper = strtok(NULL, ":");
+          if(NULL != szPan && NULL != szShoulder && NULL != szElbow && NULL != szGripper){
+            bool gripper = (*szGripper == 'O');
+            int pan = atoi(szPan);
+            int shoulder = atoi(szShoulder);
+            int elbow = atoi(szElbow);
+            _arm.move_to(pan, shoulder, elbow, gripper);
+          }
+        }
       }
       memset(_cmd, 0, MAX_CMD_LEN);
       _next = 0;
