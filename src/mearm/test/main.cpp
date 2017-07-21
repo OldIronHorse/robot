@@ -74,7 +74,7 @@ void setup_serial(){
 }
 
 DEFINE_TEST(cmd_move_to)
-  Serial._in_buffer = "MT:135:010:120:C\n";
+  Serial._in_buffer = "M:135:010:120:C\n";
   while(!Serial._in_buffer.empty() || arm.is_moving()){
     arm_cmd.read();
     arm.move();
