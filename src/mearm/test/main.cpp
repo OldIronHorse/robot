@@ -85,6 +85,18 @@ DEFINE_TEST(cmd_move_to)
   assertEqual(0,arm._servos[Mearm::GRIPPER].m_angle);
 }
 
+DEFINE_TEST(cmd_move_to_multiple)
+  Serial._in_buffer = "M:135:010:120:C\nM:45:70:35:O\n";
+  while(!Serial._in_buffer.empty() || arm.is_moving()){
+    arm_cmd.read();
+    arm.move();
+  }
+  assertEqual(135,arm._servos[Mearm::PAN].m_angle);
+  assertEqual(10,arm._servos[Mearm::SHOULDER].m_angle);
+  assertEqual(120,arm._servos[Mearm::ELBOW].m_angle);
+  assertEqual(0,arm._servos[Mearm::GRIPPER].m_angle);
+}
+
 DEFINE_TEST(cmd_unknown)
   Serial._in_buffer = "X:135:010:120:C\n";
   while(!Serial._in_buffer.empty() || arm.is_moving()){
@@ -147,6 +159,7 @@ END_TEST_SUITE
 
 BEGIN_TEST_SUITE(arm_serial_commands)
 ADD_TEST(cmd_move_to)
+ADD_TEST(cmd_move_to_multiple)
 ADD_TEST(cmd_unknown)
 ADD_TEST(cmd_no_command)
 ADD_TEST(cmd_move_to_malformed)
