@@ -35,3 +35,16 @@ void CmdArm::read(){
   }
 }
 
+void CmdArm::mark(){
+  Serial.print("P:");
+  Serial.print(_arm._servos[Mearm::PAN].read());
+  Serial.print(":");
+  Serial.print(_arm._servos[Mearm::SHOULDER].read());
+  Serial.print(":");
+  Serial.print(_arm._servos[Mearm::ELBOW].read());
+  if(90==_arm._servos[Mearm::GRIPPER].read()){
+    Serial.println(":O");
+  }else{
+    Serial.println(":C");
+  }
+}

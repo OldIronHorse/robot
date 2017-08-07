@@ -167,6 +167,19 @@ DEFINE_TEST(cmd_too_long)
   assertEqual(90,arm._servos[Mearm::GRIPPER].m_angle);
 }
 
+DEFINE_TEST(mark_position)
+  arm._servos[Mearm::PAN].m_angle=45;
+  arm._servos[Mearm::SHOULDER].m_angle=85;
+  arm._servos[Mearm::ELBOW].m_angle=125;
+  arm._servos[Mearm::GRIPPER].m_angle=90;
+  arm_cmd.mark();
+  assertEqual("P:45:85:125:O\n",Serial._out_buffer);
+}
+
+BEGIN_TEST_SUITE(to_pc)
+ADD_TEST(mark_position)
+END_TEST_SUITE
+
 BEGIN_TEST_SUITE(arm_dof)
 ADD_TEST(gripper)
 ADD_TEST(elbow)
@@ -191,5 +204,6 @@ END_TEST_SUITE
 int main(void) {
   return run(arm_dof, setup_arm) + 
          run(coordinated_movement, setup_coordinated) +
-         run(arm_serial_commands, setup_serial);
+         run(arm_serial_commands, setup_serial) +
+         run(to_pc);
 }

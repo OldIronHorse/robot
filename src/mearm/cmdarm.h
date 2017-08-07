@@ -8,6 +8,7 @@ class CmdArm{
     CmdArm(Mearm &arm);
 
     void read();
+    void mark();
 
     Mearm &_arm;
 
