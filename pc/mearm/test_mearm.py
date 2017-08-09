@@ -12,7 +12,7 @@ class MockSerial:
     return len(s)
 
   def readline(self):
-    [line, rest]=self.in_buffer.split(b'\n')
+    [line, rest]=self.in_buffer.split(b'\n',1)
     self.in_buffer=rest
     return line;
 
@@ -32,7 +32,12 @@ class TestRecord(TestCase):
 
   def test_single(self):
     self.ser.in_buffer=b'P:45:85:125:O\n'
-    self.assertEqual((b'P',45,85,125,True),  self.arm.read())
+    self.assertEqual([b'P',45,85,125,True],self.arm.read())
+
+  def test_multiple(self):
+    self.ser.in_buffer=b'P:45:85:125:O\nP:55:95:135:C\n'
+    self.assertEqual([b'P',45,85,125,True],self.arm.read())
+    self.assertEqual([b'P',55,95,135,False],self.arm.read())
 
 if __name__=='__main__':
   main()

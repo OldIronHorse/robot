@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-parsers={b'P': lambda l: (b'P',int(l[0]),int(l[1]),int(l[2]),l[3]==b'O')}
+parsers={b'P': lambda l: [b'P',int(l[0]),int(l[1]),int(l[2]),l[3]==b'O']}
 
 class Arm:
   def __init__(self,ser):
