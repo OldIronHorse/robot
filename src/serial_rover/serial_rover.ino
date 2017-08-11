@@ -39,6 +39,8 @@ void loop() {
       for(int angle = 0; angle < 180; angle += 10){
         scanner.write(angle);
         delay(100);
+        Serial.print(angle);
+        Serial.print(':');
         Serial.print(ranger.Ranging(CM));
         Serial.print(',');
       }

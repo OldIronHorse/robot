@@ -33,10 +33,11 @@ DEFINE_TEST(setup_init_and_read_loop)
   assertEqual(LOW, MockArduino::instance().pin_out[7]);
 }
 
-TestFunc tests[] = {&setup_and_init,
-                    &setup_init_and_loop,
-                    &setup_init_and_read_loop,
-                    0};
+BEGIN_TEST_SUITE(rover_read_tests)
+ADD_TEST(setup_and_init)
+ADD_TEST(setup_init_and_loop)
+ADD_TEST(setup_init_and_read_loop)
+END_TEST_SUITE
 
 void setup_format(){
   Serial.begin(9600);
@@ -272,7 +273,7 @@ ADD_TEST(scan)
 END_TEST_SUITE
 
 int main(void) {
-  return run(tests, set_up) + 
+  return run(rover_read_tests, set_up) + 
          run(print_tests, setup_format) + 
          run(println_tests, setup_format) +
          run(commands_tests, setup_commands, teardown_commands);
