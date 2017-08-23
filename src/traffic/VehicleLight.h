@@ -5,11 +5,10 @@ class VehicleLight{
   public:
     VehicleLight(int pin_red,int pin_amber,int pin_green);
     void init();
+    void tic();
 
     void stop();
-    void wait();
     void go();
-    void caution();
 
   private:
     int _pin_red;

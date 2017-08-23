@@ -17,20 +17,8 @@ void VehicleLight::stop(){
   digitalWrite(_pin_green,LOW);
 }
 
-void VehicleLight::wait(){
-  digitalWrite(_pin_red,HIGH);
-  digitalWrite(_pin_amber,HIGH);
-  digitalWrite(_pin_green,LOW);
-}
-
 void VehicleLight::go(){
   digitalWrite(_pin_red,LOW);
   digitalWrite(_pin_amber,LOW);
   digitalWrite(_pin_green,HIGH);
-}
-
-void VehicleLight::caution(){
-  digitalWrite(_pin_red,LOW);
-  digitalWrite(_pin_amber,HIGH);
-  digitalWrite(_pin_green,LOW);
 }

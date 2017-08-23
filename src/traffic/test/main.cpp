@@ -20,52 +20,48 @@ DEFINE_TEST(vehicle_initial_state)
   assertEqual(LOW,MockArduino::instance().pin_out[5]);
 }
 
-DEFINE_TEST(vehicle_stop)
-  v_light.stop();
-  assertEqual(HIGH,MockArduino::instance().pin_out[3]);
-  assertEqual(LOW,MockArduino::instance().pin_out[4]);
-  assertEqual(LOW,MockArduino::instance().pin_out[5]);
-}
-
-DEFINE_TEST(vehicle_wait)
-  v_light.wait();
-  assertEqual(HIGH,MockArduino::instance().pin_out[3]);
-  assertEqual(HIGH,MockArduino::instance().pin_out[4]);
-  assertEqual(LOW,MockArduino::instance().pin_out[5]);
-}
-
-DEFINE_TEST(vehicle_go)
-  v_light.go();
-  assertEqual(LOW,MockArduino::instance().pin_out[3]);
-  assertEqual(LOW,MockArduino::instance().pin_out[4]);
-  assertEqual(HIGH,MockArduino::instance().pin_out[5]);
-}
-
-DEFINE_TEST(vehicle_caution)
-  v_light.caution();
-  assertEqual(LOW,MockArduino::instance().pin_out[3]);
-  assertEqual(HIGH,MockArduino::instance().pin_out[4]);
-  assertEqual(LOW,MockArduino::instance().pin_out[5]);
-}
-
 DEFINE_TEST(vehicle_sequence)
-  v_light.stop();
+  // stop
   assertEqual(HIGH,MockArduino::instance().pin_out[3]);
   assertEqual(LOW,MockArduino::instance().pin_out[4]);
   assertEqual(LOW,MockArduino::instance().pin_out[5]);
-  v_light.wait();
+  v_light.go();
+  // still stop
+  assertEqual(HIGH,MockArduino::instance().pin_out[3]);
+  assertEqual(LOW,MockArduino::instance().pin_out[4]);
+  assertEqual(LOW,MockArduino::instance().pin_out[5]);
+  v_light.tic();
+  // wait
   assertEqual(HIGH,MockArduino::instance().pin_out[3]);
   assertEqual(HIGH,MockArduino::instance().pin_out[4]);
   assertEqual(LOW,MockArduino::instance().pin_out[5]);
-  v_light.go();
+  v_light.tic();
+  // go
   assertEqual(LOW,MockArduino::instance().pin_out[3]);
   assertEqual(LOW,MockArduino::instance().pin_out[4]);
   assertEqual(HIGH,MockArduino::instance().pin_out[5]);
-  v_light.caution();
+  v_light.tic();
+  // still go
+  assertEqual(LOW,MockArduino::instance().pin_out[3]);
+  assertEqual(LOW,MockArduino::instance().pin_out[4]);
+  assertEqual(HIGH,MockArduino::instance().pin_out[5]);
+  v_light.stop();
+  // still go
+  assertEqual(LOW,MockArduino::instance().pin_out[3]);
+  assertEqual(LOW,MockArduino::instance().pin_out[4]);
+  assertEqual(HIGH,MockArduino::instance().pin_out[5]);
+  v_light.tic();
+  // caution
   assertEqual(LOW,MockArduino::instance().pin_out[3]);
   assertEqual(HIGH,MockArduino::instance().pin_out[4]);
   assertEqual(LOW,MockArduino::instance().pin_out[5]);
-  v_light.stop();
+  v_light.tic();
+  // stop
+  assertEqual(HIGH,MockArduino::instance().pin_out[3]);
+  assertEqual(LOW,MockArduino::instance().pin_out[4]);
+  assertEqual(LOW,MockArduino::instance().pin_out[5]);
+  v_light.tic();
+  // still stop
   assertEqual(HIGH,MockArduino::instance().pin_out[3]);
   assertEqual(LOW,MockArduino::instance().pin_out[4]);
   assertEqual(LOW,MockArduino::instance().pin_out[5]);
@@ -73,10 +69,6 @@ DEFINE_TEST(vehicle_sequence)
 
 BEGIN_TEST_SUITE(vehicle_light_tests)
 ADD_TEST(vehicle_initial_state)
-ADD_TEST(vehicle_stop)
-ADD_TEST(vehicle_wait)
-ADD_TEST(vehicle_go)
-ADD_TEST(vehicle_caution)
 ADD_TEST(vehicle_sequence)
 END_TEST_SUITE
 
@@ -142,6 +134,7 @@ void intersection_3_set_up(void){
 }
 
 DEFINE_TEST(intersection_3_initial)
+  assertEqual(Intersection3::ALL_STOP,inter3.state());
   // pedestrian red
   assertEqual(HIGH,MockArduino::instance().pin_out[3]);
   assertEqual(LOW,MockArduino::instance().pin_out[4]);
@@ -154,9 +147,25 @@ DEFINE_TEST(intersection_3_initial)
   assertEqual(LOW,MockArduino::instance().pin_out[9]);
   assertEqual(LOW,MockArduino::instance().pin_out[10]);
 }
+// TODO: what about wait and button and timers?
+DEFINE_TEST(intersection_3_sequence)
+  assertEqual(Intersection3::ALL_STOP,inter3.state());
+  inter3.next();
+  assertEqual(Intersection3::NS_GO,inter3.state());
+  inter3.next();
+  assertEqual(Intersection3::NS_GO,inter3.state());
+  inter3.next();
+  assertEqual(Intersection3::EW_GO,inter3.state());
+  inter3.next();
+  assertEqual(Intersection3::PED_GO,inter3.state());
+  inter3.next();
+  assertEqual(Intersection3::NS_GO,inter3.state());
+  //TODO: lights?
+}
 
 BEGIN_TEST_SUITE(intersection_3_tests)
 ADD_TEST(intersection_3_initial)
+ADD_TEST(intersection_3_sequence)
 END_TEST_SUITE
 
 
