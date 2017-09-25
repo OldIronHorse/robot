@@ -105,5 +105,8 @@ template<class T>
 T max(T a, T b){
   return ((a)>(b)?(a):(b));
 }
+
+#define F(a) a
+#define strncmp_P(a,b,c) strncmp(a,b,c)
 #define random(a,b) random_(a,b)
 #endif

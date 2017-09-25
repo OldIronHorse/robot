@@ -14,17 +14,17 @@ void Commands::read(){
     if('\n' == c){
       // Command complete
       // TODO parse buffer
-      if(0 == strncmp("FWD",_cmd_buffer,3)){
+      if(0 == strncmp_P(_cmd_buffer, (const char*)F("FWD"),3)){
         _verb = FORWARD;
-      }else if(0 == strncmp("BWD",_cmd_buffer,3)){
+      }else if(0 == strncmp_P(_cmd_buffer, (const char*)F("BWD"),3)){
         _verb = BACKWARD;
-      }else if(0 == strncmp("RT",_cmd_buffer,2)){
+      }else if(0 == strncmp_P(_cmd_buffer, (const char*)F("RT"),2)){
         _verb = RIGHT;
-      }else if(0 == strncmp("LT",_cmd_buffer,2)){
+      }else if(0 == strncmp_P(_cmd_buffer, (const char*)F("LT"),2)){
         _verb = LEFT;
-      }else if(0 == strncmp("STP",_cmd_buffer,3)){
+      }else if(0 == strncmp_P(_cmd_buffer, (const char*)F("STP"),3)){
         _verb = STOP;
-      }else if(0 == strncmp("SCN",_cmd_buffer,2)){
+      }else if(0 == strncmp_P(_cmd_buffer, (const char*)F("SCN"),2)){
         _verb = SCAN;
       }
       _cmd_buffer_next = 0;
