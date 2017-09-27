@@ -107,6 +107,7 @@ T max(T a, T b){
 }
 
 #define F(a) a
+#define PROGMEM
 #define strncmp_P(a,b,c) strncmp(a,b,c)
 #define random(a,b) random_(a,b)
 #endif
