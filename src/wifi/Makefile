@@ -1,6 +1,6 @@
 BOARD_TAG=uno
 ARDUINO_PORT=/dev/ttyACM*
-ARDUINO_LIBS=SPI WiFi DebugUtils
+ARDUINO_LIBS=Wire UnoWiFi-Developer-Edition-Lib DebugUtils
 USER_LIB_PATH=../../libraries
 OS := $(shell uname)
 ifeq ($(OS), Darwin)
