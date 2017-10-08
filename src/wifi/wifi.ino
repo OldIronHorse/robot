@@ -29,5 +29,18 @@ void loop(){
     String cmd = Wifi.readStringUntil('/');
     Wifi.print("Command: ");
     Wifi.println(cmd);
+    if(cmd == "digital"){
+      // digital/<pin>[/[1|0]]
+      int pin = Wifi.parseInt();
+      if('/' == Wifi.read()){
+        int value = Wifi.parseInt();
+        digitalWrite(pin, value);
+      }else{
+        int value = digitalRead(pin);
+      }
+    }else if(cmd == "analog"){
+    }else if(cmd == "mode"){
+    }else{
+    }
   }
 }
