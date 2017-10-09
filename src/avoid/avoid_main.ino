@@ -7,11 +7,7 @@
 #include "avoid.h"
 #include "scan.h"
 
-//TODO: Switchable modes (via IR remote)
-// - remote controlled via IR
-// - autonomous
-//  - various modes and strategies?
-//    - control parameters via IR remote?
+//TODO: Control via WiFi and telnet
 
 Servo scanner;
 Rover rover;
