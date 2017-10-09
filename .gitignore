@@ -3,3 +3,5 @@ build-uno
 bin
 obj
 *.swo
+__pycache__
+*.pyc
