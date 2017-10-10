@@ -1,3 +1,4 @@
+#include <UnoWiFiDevEd.h>
 #include <rover.h>
 #include <IRremote.h>
 #include "ir_cmd.h"
@@ -10,6 +11,8 @@ void setup(){
   rover.setup();
   ir_recv.enableIRIn();
   //Serial.begin(9600);
+  Wifi.begin();
+  Wifi.println("Rover started.");
 }
 
 unsigned long speed = rover.max_speed;

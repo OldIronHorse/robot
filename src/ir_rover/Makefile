@@ -1,6 +1,6 @@
 BOARD_TAG=uno
 ARDUINO_PORT=/dev/ttyACM*
-ARDUINO_LIBS=IRremote rover Ultrasonic
+ARDUINO_LIBS=IRremote rover Ultrasonic Wire UnoWiFi-Developer-Edition-Lib
 USER_LIB_PATH=../../libraries
 OS := $(shell uname)
 ifeq ($(OS), Darwin)

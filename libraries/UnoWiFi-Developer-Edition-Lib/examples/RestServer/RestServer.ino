@@ -128,7 +128,7 @@ void modeCommand(WifiData client) {
   pin = client.parseInt();
 
   // If the next character is not a '/' we have a malformed URL
-  if (client.read() != '/') {
+  if(client.read() != '/') {
     client.println(F("error"));
     client.print(EOL);    //char terminator
     return;
@@ -136,7 +136,7 @@ void modeCommand(WifiData client) {
 
   String mode = client.readStringUntil('\r');
 
-  if (mode == "input") {
+  if(mode == "input") {
     pinMode(pin, INPUT);
     // Send feedback to client
     client.println("HTTP/1.1 200 OK\n");
@@ -147,7 +147,7 @@ void modeCommand(WifiData client) {
     return;
   }
 
-  if (mode == "output") {
+  if(mode == "output") {
     pinMode(pin, OUTPUT);
     // Send feedback to client
     client.println("HTTP/1.1 200 OK\n");

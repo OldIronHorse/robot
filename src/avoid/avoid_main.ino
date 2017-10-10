@@ -1,5 +1,6 @@
 #define DEBUG_OUTPUT
 #include <DebugUtils.h>
+#include <UnoWiFiDevEd.h>
 #include <IRremote.h>
 #include <Servo.h>
 #include <rover.h>
@@ -27,6 +28,7 @@ unsigned int last_cmd = ir_cmd::none;
 
 void setup(){
   DEBUG_INIT(9600)
+  Wifi.begin();
   scanner.attach(10);
   rover.setup();
   avoid.setup(speed);
@@ -34,6 +36,8 @@ void setup(){
   ir_recv.enableIRIn();
   mode = REMOTE;
   rover.stop();
+  Wifi.println("Rover started.");
+  Wifi.println("mode = REMOTE");
 }
 
 void loop(){
@@ -45,15 +49,18 @@ void loop(){
       case ir_cmd::d1:
         mode = REMOTE;
         rover.stop();
+        Wifi.println("mode = REMOTE");
         break;
       case ir_cmd::d2:
         mode = AVOID;
         scanner.write(90);
         rover.forward(speed);
+        Wifi.println("mode = AVOID");
         break;
       case ir_cmd::d3:
         mode = SCAN;
         scan.start(speed);
+        Wifi.println("mode = SCAN");
         break;
       case ir_cmd::vol_up:
         speed = min(speed + 5, Rover::max_speed);
@@ -120,6 +127,11 @@ void loop(){
           break;
       }
       break;
+  }
+  if(Wifi.available()){
+    Wifi.println("HTTP/1.1 200 OK\n");
+    Wifi.print(Wifi.readString());
+    Wifi.print(EOL);
   }
   delay(100);
 }
