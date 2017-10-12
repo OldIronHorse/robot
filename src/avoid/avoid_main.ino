@@ -5,6 +5,7 @@
 #include <ir_cmd.h>
 #include "avoid.h"
 #include "scan.h"
+#include "streamscan.h"
 
 //TODO: Control via WiFi and telnet
 
@@ -12,10 +13,11 @@ Servo scanner;
 Rover rover;
 Ultrasonic ranger(12, 13);
 Avoid avoid(rover, ranger);
-Scan scan(rover, ranger, scanner, Wifi);
+Scan scan(rover, ranger, scanner);
+StreamScan stream_scan(rover, ranger, scanner, Wifi);
 IRrecv ir_recv(9);
 decode_results results;
-enum Mode {REMOTE, AVOID, SCAN};
+enum Mode {REMOTE, AVOID, SCAN, STREAM_SCAN};
 Mode mode;
 unsigned int speed = Rover::max_speed;
 unsigned int last_cmd = ir_cmd::none;
@@ -49,6 +51,10 @@ void loop(){
       case ir_cmd::d3:
         mode = SCAN;
         scan.start(speed);
+        break;
+      case ir_cmd::d4:
+        mode = STREAM_SCAN;
+        stream_scan.start(speed);
         break;
       case ir_cmd::vol_up:
         speed = min(speed + 5, Rover::max_speed);
