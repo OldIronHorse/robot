@@ -10,6 +10,6 @@ void setup(){
 
 void loop(){
   if(Wifi.available()){
-    Wifi.print(Wifi.read());
+    Wifi.print(Wifi.readString());
   }
 }

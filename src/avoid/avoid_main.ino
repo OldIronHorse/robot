@@ -124,11 +124,6 @@ void loop(){
       }
       break;
   }
-  if(Wifi.available()){
-    Wifi.println("HTTP/1.1 200 OK\n");
-    Wifi.print(Wifi.readString());
-    Wifi.print(EOL);
-  }
   delay(100);
 }
 
