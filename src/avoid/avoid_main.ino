@@ -60,6 +60,7 @@ void loop(){
       case ir_cmd::d4:
         mode = STREAM_SCAN;
         stream_scan.start(speed);
+        Wifi.println("mode = STREAM_SCAN");
         break;
       case ir_cmd::vol_up:
         speed = min(speed + 5, Rover::max_speed);
@@ -80,6 +81,9 @@ void loop(){
     }
   }
   switch(mode){
+    case STREAM_SCAN:
+      stream_scan.loop(speed);
+      break;
     case SCAN:
       scan.loop(speed);
       break;
