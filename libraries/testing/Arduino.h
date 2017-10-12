@@ -51,12 +51,8 @@ class MockArduino {
 #define OCT 8
 #define BIN 2
 
-class MockSerial{
+class Print{
   public:
-    MockSerial();
-
-    void begin(int speed);
-    void end();
     void print(char c);
     void print(const char *szText);
     void print(int n, int base = DEC);
@@ -65,21 +61,32 @@ class MockSerial{
     void println(const char* szText = "");
     void println(int n, int base = DEC);
     void println(double d, int dp = 2);
+
+    std::string _out_buffer;
+    bool _ready = true;
+};
+
+class Stream: public Print{
+  public:
     int available();
     int read();
     int peek();
     void flush(){;}
 
-    bool _ready;
-    int _speed;
-    std::string _out_buffer;
     std::string _in_buffer;
 };
 
-extern MockSerial Serial;
+class MockSerial: public Stream{
+  public:
+    MockSerial();
 
-class Stream: public MockSerial{
+    void begin(int speed);
+    void end();
+
+    int _speed;
 };
+
+extern MockSerial Serial;
 
 void setup(void);
 void loop(void);
