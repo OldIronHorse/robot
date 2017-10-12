@@ -5,13 +5,14 @@
 #include <Servo.h>
 #include <rover.h>
 #include "../avoid.h"
-#include "../scan.h"
+#include "../streamscan.h"
 
 Rover rover;
 Ultrasonic ranger(12, 13);
 Avoid avoid(rover, ranger);
 Servo scanner;
-Scan scan(rover, ranger, scanner);
+Stream io_stream;
+StreamScan scan(rover, ranger, scanner, io_stream);
 
 void set_up() {
   MockArduino::instance().reset();

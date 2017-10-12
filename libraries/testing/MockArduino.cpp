@@ -143,8 +143,9 @@ void randomSeed(int n){
 MockSerial Serial;
 
 MockSerial::MockSerial()
-:_speed(0), _ready(false)
-{;}
+:_speed(0){
+  _ready = false;
+}
 
 void MockSerial::begin(int speed){
   _speed = speed;
@@ -157,40 +158,40 @@ void MockSerial::end(){
   _ready = false;
 }
 
-void MockSerial::print(char c){
+void Print::print(char c){
   if(_ready){
     _out_buffer.push_back(c);
   }
 }
 
-void MockSerial::println(char c){
+void Print::println(char c){
   if(_ready){
     _out_buffer.push_back(c);
     _out_buffer.push_back('\n');
   }
 }
 
-void MockSerial::print(const char *szText){
+void Print::print(const char *szText){
   if(_ready){
     _out_buffer.append(szText);
   }
 }
 
-void MockSerial::println(const char *szText){
+void Print::println(const char *szText){
   if(_ready){
     _out_buffer.append(szText);
     _out_buffer.push_back('\n');
   }
 }
 
-void MockSerial::println(double d, int dp){
+void Print::println(double d, int dp){
   if(_ready){
     print(d,dp);
     _out_buffer.push_back('\n');
   }
 }
 
-void MockSerial::print(double d, int dp){
+void Print::print(double d, int dp){
   if(_ready){
     std::stringstream ss;
     ss.precision(dp);
@@ -199,14 +200,14 @@ void MockSerial::print(double d, int dp){
   }
 }
 
-void MockSerial::println(int n, int base){
+void Print::println(int n, int base){
   if(_ready){
     print(n,base);
     _out_buffer.push_back('\n');
   }
 }
 
-void MockSerial::print(int n, int base){
+void Print::print(int n, int base){
   if(_ready){
     if(2 == base){ 
       std::string str(std::bitset< 64 >(n).to_string());
@@ -228,7 +229,7 @@ void MockSerial::print(int n, int base){
   }
 }
 
-int MockSerial::read(){
+int Stream::read(){
   if(!_ready || _in_buffer.empty()){
     return -1;
   }else{
@@ -238,7 +239,7 @@ int MockSerial::read(){
   }
 }
 
-int MockSerial::peek(){
+int Stream::peek(){
   if(!_ready || _in_buffer.empty()){
     return -1;
   }else{
@@ -246,7 +247,7 @@ int MockSerial::peek(){
   }
 }
 
-int MockSerial::available(){
+int Stream::available(){
   if(_ready){
     return _in_buffer.length();
   }else{

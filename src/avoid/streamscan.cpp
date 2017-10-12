@@ -1,9 +1,6 @@
-#include "scan.h"
+#include "streamscan.h"
 
-void Scan::setup(unsigned int speed){
-}
-
-void Scan::loop(unsigned int speed){
+void StreamScan::loop(unsigned int speed){
   if(_running){
     int range = _ranger.Ranging(CM);
     if(range < 50){
@@ -12,17 +9,23 @@ void Scan::loop(unsigned int speed){
     }
   }else{
     // scan
+    _stream.print("SCAN");
     int max_range = 0;
     int max_range_angle = 0;
     for(int angle = 0; angle <= 180; angle += 10){
       _scanner.write(angle);
       delay(100);
       int range = _ranger.Ranging(CM);
+      _stream.print("|");
+      _stream.print(angle);
+      _stream.print(":");
+      _stream.print(range);
       if(range > max_range && range < 1000){
         max_range = range;
         max_range_angle = angle;
       }
     }
+    _stream.println();
     _scanner.write(90);
     // turn
     if(max_range_angle > 90){
@@ -46,10 +49,3 @@ void Scan::loop(unsigned int speed){
   }
 }
 
-
-void Scan::start(unsigned int speed){
-  _running = true;
-  _scanner.write(90);
-  _rover.forward(speed);
-  loop(speed);
-}
