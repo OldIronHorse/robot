@@ -1,5 +1,4 @@
-#define DEBUG_OUTPUT
-#include <DebugUtils.h>
+#include <UnoWiFiDevEd.h>
 #include <IRremote.h>
 #include <Servo.h>
 #include <rover.h>
@@ -13,7 +12,7 @@ Servo scanner;
 Rover rover;
 Ultrasonic ranger(12, 13);
 Avoid avoid(rover, ranger);
-Scan scan(rover, ranger, scanner);
+Scan scan(rover, ranger, scanner, Wifi);
 IRrecv ir_recv(9);
 decode_results results;
 enum Mode {REMOTE, AVOID, SCAN};
@@ -22,7 +21,7 @@ unsigned int speed = Rover::max_speed;
 unsigned int last_cmd = ir_cmd::none;
 
 void setup(){
-  DEBUG_INIT(9600)
+  Wifi.begin();
   scanner.attach(10);
   rover.setup();
   avoid.setup(speed);

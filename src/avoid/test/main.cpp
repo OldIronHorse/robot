@@ -11,7 +11,8 @@ Rover rover;
 Ultrasonic ranger(12, 13);
 Avoid avoid(rover, ranger);
 Servo scanner;
-Scan scan(rover, ranger, scanner);
+Stream io_stream;
+Scan scan(rover, ranger, scanner, io_stream);
 
 void set_up() {
   MockArduino::instance().reset();

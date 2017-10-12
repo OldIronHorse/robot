@@ -62,7 +62,7 @@ class MockSerial{
     void print(int n, int base = DEC);
     void print(double d, int dp = 2);
     void println(char c);
-    void println(const char* szText);
+    void println(const char* szText = "");
     void println(int n, int base = DEC);
     void println(double d, int dp = 2);
     int available();
@@ -77,6 +77,9 @@ class MockSerial{
 };
 
 extern MockSerial Serial;
+
+class Stream: public MockSerial{
+};
 
 void setup(void);
 void loop(void);

@@ -1,6 +1,4 @@
 #include <Arduino.h>
-#define DEBUG_OUTPUT
-#include <DebugUtils.h>
 #include "avoid.h"
 
 //TODO: Interrupt-based range checking?
@@ -29,7 +27,6 @@ void Avoid::setup(unsigned int speed){
 
 void Avoid::loop(unsigned int speed){
   int range = ranger.Ranging(CM);
-  DEBUG_PRINTLN(range)
   switch(state){
     case running:
       if(range < min_range_cm){
