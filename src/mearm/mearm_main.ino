@@ -11,84 +11,66 @@
  * pan      (3)  800 2400 
  */
 
-Servo shoulder;
-Servo elbow;
-Servo pan;
-Servo gripper;
-#define ELBOW_MIN 1150
-#define ELBOW_MAX 2370
-int mus_elbow = (ELBOW_MAX+ELBOW_MIN)/2;
-#define SHOULDER_MIN 1350
-#define SHOULDER_MAX 2350
-int mus_shoulder = (SHOULDER_MAX+SHOULDER_MIN)/2;
-#define GRIPPER_MIN 1800
-#define GRIPPER_MAX 2325
-int mus_gripper = (GRIPPER_MAX+GRIPPER_MIN)/2;
-#define PAN_MIN 800
-#define PAN_MAX 2400
-int mus_pan = (PAN_MAX+PAN_MIN)/2;
+enum Joint {GRIPPER, ELBOW, SHOULDER, PAN};
+#define JOINTS 4
+Servo joints[4];
+const int pins[] = {9, 6, 5, 3};
+const int min_mu_sec[] = {1800, 1150, 1350, 800};
+const int max_mu_sec[] = {2325, 2370, 2350, 2400};
+int mu_sec[4];
 
 void setup(){
   DEBUG_INIT(9600);
   nunchuk_init();
-  elbow.attach(6);
-  pan.attach(3);
-  gripper.attach(9);
-  shoulder.attach(5);
+  for(int s = 0; s < 4; ++s){
+    joints[s].attach(pins[s]);
+    mu_sec[s] = (max_mu_sec[s] + min_mu_sec[s]) / 2;
+  }
 }
 
 #define MAX_STEP 15
-int delta_t = 5;
+#define DELTA_T 5
 int last_t = 0;
 
 void loop(){
   int now_t = millis();
-  if(now_t - last_t > delta_t){
-    int delta_g = 0;
-    int delta_e = 0;
-    int delta_s = 0;
-    int delta_p = 0;
+  if(now_t - last_t > DELTA_T){
+    int deltas[] = {0, 0, 0, 0};
     last_t = now_t;
     nunchuk_get_data();
     int zbutton = nunchuk_zbutton();
     int xjoy = nunchuk_cjoy_x();
     if(abs(xjoy) > 5){
       if(zbutton){
-        delta_g = map(xjoy, 0, 100, 0, MAX_STEP);
+        deltas[GRIPPER] = map(xjoy, 0, 100, 0, MAX_STEP);
       }else{
-        delta_p = -1 * map(xjoy, 0, 100, 0, MAX_STEP);
+        deltas[PAN] = -1 * map(xjoy, 0, 100, 0, MAX_STEP);
       }
     }
     int yjoy = nunchuk_cjoy_y();
     if(abs(yjoy) > 5){
       if(zbutton){
-        delta_e = map(yjoy, 0, 100, 0, MAX_STEP);
+        deltas[ELBOW] = map(yjoy, 0, 100, 0, MAX_STEP);
       }else{
-        delta_s = map(yjoy, 0, 100, 0, MAX_STEP);
+        deltas[SHOULDER] = map(yjoy, 0, 100, 0, MAX_STEP);
       }
     }
+#ifdef DEBUG_OUTPUT
     DEBUG_PRINT(xjoy)
     DEBUG_PRINT(',')
     DEBUG_PRINT(yjoy)
     DEBUG_PRINT(',')
     DEBUG_PRINT(zbutton)
     DEBUG_PRINT(' ')
-    DEBUG_PRINT(delta_p)
-    DEBUG_PRINT(':')
-    DEBUG_PRINT(delta_s)
-    DEBUG_PRINT(':')
-    DEBUG_PRINT(delta_e)
-    DEBUG_PRINT(xjoy)
-    DEBUG_PRINT(':')
-    DEBUG_PRINT(delta_g)
+    for(int i = 0; i < 4; ++i){
+      DEBUG_PRINT(deltas[i])
+      DEBUG_PRINT(':')
+    }
     DEBUG_PRINTLN()
-    mus_gripper = max(GRIPPER_MIN, min(GRIPPER_MAX, mus_gripper + delta_g));
-    mus_elbow = max(ELBOW_MIN, min(ELBOW_MAX, mus_elbow + delta_e));
-    mus_shoulder = max(SHOULDER_MIN, min(SHOULDER_MAX, mus_shoulder + delta_s));
-    mus_pan = max(PAN_MIN, min(PAN_MAX, mus_pan + delta_p));
+#endif //DEBUG_OUTPUT
+    for(int i = 0; i < 4; ++i){
+      mu_sec[i] = max(min_mu_sec[i], min(max_mu_sec[i], mu_sec[i] + deltas[i]));
+      joints[i].writeMicroseconds(mu_sec[i]);
+    }
   }
-  elbow.writeMicroseconds(mus_elbow);
-  shoulder.writeMicroseconds(mus_shoulder);
-  gripper.writeMicroseconds(mus_gripper);
-  pan.writeMicroseconds(mus_pan);
 }
