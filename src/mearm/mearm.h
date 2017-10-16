@@ -2,11 +2,6 @@
 #define mearm_h
 #include <Servo.h>
 
-#define GRIPPER_MIN 120
-#define GRIPPER_MAX 175
-#define ELBOW_MIN 80
-#define ELBOW_MAX 180
-
 class Mearm{
   public:
     Mearm();

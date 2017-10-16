@@ -38,10 +38,10 @@ int angle = 0;
 int delta = 10;
 
 void loop(){
-  arm.elbow(angle);
+  arm.pan(angle);
   DEBUG_PRINT(angle)
   DEBUG_PRINT(":")
-  DEBUG_PRINTLN(arm._servos[Mearm::ELBOW].read())
+  DEBUG_PRINTLN(arm._servos[Mearm::PAN].read())
   angle += delta;
   delay(1000);
   if(angle>=180 || angle<=0){

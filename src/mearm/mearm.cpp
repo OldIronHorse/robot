@@ -4,7 +4,7 @@
 #include "mearm.h"
 
 const int Mearm::_max[] = {180,180,180,175};
-const int Mearm::_min[] = {  0,  0, 80,120};
+const int Mearm::_min[] = {  0, 85, 80,120};
 
 Mearm::Mearm()
 :_step(0),_step_count(0){;}
