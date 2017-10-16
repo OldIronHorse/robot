@@ -1,4 +1,4 @@
-#define DEBUG_OUTPUT
+//#define DEBUG_OUTPUT
 #include <DebugUtils.h>
 #include <Arduino.h>
 #include "mearm.h"

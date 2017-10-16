@@ -1,6 +1,6 @@
 BOARD_TAG=uno
 ARDUINO_PORT=/dev/ttyACM*
-ARDUINO_LIBS=Servo DebugUtils
+ARDUINO_LIBS=Servo DebugUtils Wire wiinunchuk
 USER_LIB_PATH=../../libraries
 OS := $(shell uname)
 ifeq ($(OS), Darwin)
