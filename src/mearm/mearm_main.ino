@@ -1,4 +1,4 @@
-#define DEBUG_OUTPUT
+//#define DEBUG_OUTPUT
 #include <DebugUtils.h>
 #include <Wire.h>
 #include <wiinunchuk.h>
@@ -11,13 +11,17 @@
  * pan      (3)  800 2400 
  */
 
+#define MAX_STEP 15
+#define DELTA_T 5
+
 enum Joint {GRIPPER, ELBOW, SHOULDER, PAN};
-#define JOINTS 4
+
 Servo joints[4];
 const int pins[] = {9, 6, 5, 3};
 const int min_mu_sec[] = {1800, 1150, 1350, 800};
 const int max_mu_sec[] = {2325, 2370, 2350, 2400};
 int mu_sec[4];
+int last_t = 0;
 
 void setup(){
   DEBUG_INIT(9600);
@@ -27,10 +31,6 @@ void setup(){
     mu_sec[s] = (max_mu_sec[s] + min_mu_sec[s]) / 2;
   }
 }
-
-#define MAX_STEP 15
-#define DELTA_T 5
-int last_t = 0;
 
 void loop(){
   int now_t = millis();
