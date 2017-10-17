@@ -10,16 +10,18 @@ class Mearm{
 
     void init();
     
-    void gripper(bool is_open);
+    void gripper(int angle);
     void elbow(int angle);
     void shoulder(int angle);
     void pan(int angle);
 
-    void move_to(int pan, int shoulder, int elbow, bool gripper_open);
+    void move_to(int pan, int shoulder, int elbow, int gripper);
     bool is_moving();
     void move();
 
-    enum Joint{PAN, SHOULDER, ELBOW, GRIPPER};
+    int apply_limits(int joint, int angle);
+
+    enum Joint{PAN=0, SHOULDER=1, ELBOW=2, GRIPPER=3};
 
     Servo _servos[4];
 
@@ -28,5 +30,8 @@ class Mearm{
     double _step_size[4];
     int _step;
     int _step_count;
+
+    static const int _max[];
+    static const int _min[];
 };
 #endif
