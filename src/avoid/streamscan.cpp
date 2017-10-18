@@ -15,11 +15,14 @@ void StreamScan::loop(unsigned int speed){
     for(int angle = 0; angle <= 180; angle += 10){
       _scanner.write(angle);
       delay(100);
+      uint16_t lRange = _lidar.readRangeSingleMillimeters();
       int range = _ranger.Ranging(CM);
       _stream.print("|");
       _stream.print(angle);
       _stream.print(":");
       _stream.print(range);
+      _stream.print(":");
+      _stream.print(lRange);
       if(range > max_range && range < 1000){
         max_range = range;
         max_range_angle = angle;

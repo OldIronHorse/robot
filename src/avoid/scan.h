@@ -5,11 +5,13 @@
 #include <rover.h>
 #include <Servo.h>
 #include <Ultrasonic.h>
+#include <VL53L0X.h>
 
 class Scan{
   protected:
     Rover &_rover;
     Ultrasonic &_ranger;
+    VL53L0X _lidar;
     bool _running;
     int _angle;
     int _step;

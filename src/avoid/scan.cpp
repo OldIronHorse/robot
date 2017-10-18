@@ -1,6 +1,7 @@
 #include "scan.h"
 
 void Scan::setup(unsigned int speed){
+  _lidar.init();
 }
 
 void Scan::loop(unsigned int speed){
