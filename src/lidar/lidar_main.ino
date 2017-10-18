@@ -5,6 +5,7 @@
 #include <VL53L0X.h>
 
 VL53L0X lidar;
+Ultrasonic ranger(12, 13);
 Servo scanner;
 
 void setup(){
@@ -13,14 +14,16 @@ void setup(){
 }
 
 void loop(){
-  uint16_t range[181];
   for(int a = 0; a < 181; ++a){
     scanner.write(a);
     delay(10);
-    range[a] = lidar.readRangeSingleMillimeters();
+    uint16_t l_range = lidar.readRangeSingleMillimeters();
+    int u_range = ranger.Ranging(CM);
     DEBUG_PRINT(a)
     DEBUG_PRINT(':')
-    DEBUG_PRINT(range[a])
+    DEBUG_PRINT(l_range)
+    DEBUG_PRINT(',')
+    DEBUG_PRINT(u_range)
     DEBUG_PRINT(' ')
   }
   DEBUG_PRINTLN()
