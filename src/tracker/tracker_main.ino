@@ -1,7 +1,8 @@
 #define DEBUG_OUTPUT
 #include <DebugUtils.h>
 #include <Servo.h>
-#include <VL53L0X.h>
+//#include <VL53L0X.h>
+#include <Ultrasonic.h>
 
 /* track the closes object
  *
@@ -15,25 +16,36 @@
  * - stop at minimum distance
  */
 
-#define SCAN_STEP 2
-#define TRACK_STEP 5
+#if ARDUINO_VERSION < 108
+#define UINT16_MAX 65536
+#define LONG_MAX 2147483647L
+#endif
 
-VL53L0X lidar;
+#define SCAN_STEP 2
+#define TRACK_STEP 10
+#define MIN_ANGLE 45
+#define MAX_ANGLE 135
+
+//VL53L0X lidar;
+Ultrasonic ranger(12, 13);
 Servo scanner;
 
 enum Mode {SCAN, TRACK};
 Mode mode = SCAN;
-int scan_angle = 0;
-uint16_t target_range = UINT16_MAX;
-int target_angle = 0;
+int scan_angle = MIN_ANGLE;
+//uint16_t target_range = UINT16_MAX;
+long target_range = LONG_MAX;
+int target_angle = MIN_ANGLE;
 
 void setup(){
   DEBUG_INIT(9600)
-  lidar.init();
+  scanner.attach(10);
+  //lidar.init();
 }
 
 void loop(){
-  uint16_t range = lidar.readRangeSingleMillimeters();
+  //uint16_t range = lidar.readRangeSingleMillimeters();
+  long range = ranger.Ranging(CM);
   switch(mode){
     case SCAN:
       scanner.write(scan_angle);
@@ -51,24 +63,32 @@ void loop(){
         target_angle = scan_angle;
       }
       scan_angle += SCAN_STEP;
-      if(scan_angle > 180){
+      if(scan_angle > MAX_ANGLE){
         mode = TRACK;
+        DEBUG_PRINT(F("Target Angle: "))
+        DEBUG_PRINTLN(target_angle)
       }
       break;
     case TRACK:
       int down_angle = target_angle - TRACK_STEP;
       int up_angle = target_angle + TRACK_STEP;
       scanner.write(target_angle);
-      target_range = lidar.readRangeSingleMillimeters();
+      delay(100);
+      //target_range = lidar.readRangeSingleMillimeters();
+      target_range = ranger.Ranging(CM);
       scanner.write(down_angle);
-      uint16_t down_range = lidar.readRangeSingleMillimeters();
+      delay(100);
+      //uint16_t down_range = lidar.readRangeSingleMillimeters();
+      long down_range = ranger.Ranging(CM);
       scanner.write(up_angle);
-      uint16_t up_range = lidar.readRangeSingleMillimeters();
+      delay(100);
+      //uint16_t up_range = lidar.readRangeSingleMillimeters();
+      long up_range = ranger.Ranging(CM);
+      DEBUG_PRINT(F("TRACK: "))
       DEBUG_PRINT(down_angle)
       DEBUG_PRINT('|')
       DEBUG_PRINT(down_range)
       DEBUG_PRINT('>')
-      DEBUG_PRINT(F("TRACK: "))
       DEBUG_PRINT(target_angle)
       DEBUG_PRINT('|')
       DEBUG_PRINT(target_range)
@@ -84,4 +104,6 @@ void loop(){
       }
       break;
   }
+  target_angle = min(MAX_ANGLE, max(MIN_ANGLE, target_angle));
+  delay(1);
 }

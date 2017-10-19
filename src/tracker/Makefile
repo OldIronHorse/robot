@@ -1,6 +1,6 @@
 BOARD_TAG=uno
 ARDUINO_PORT=/dev/ttyACM*
-ARDUINO_LIBS=Servo Wire vl53l0x-arduino DebugUtils
+ARDUINO_LIBS=Servo Wire vl53l0x-arduino DebugUtils Ultrasonic
 USER_LIB_PATH=../../libraries
 OS := $(shell uname)
 ifeq ($(OS), Darwin)
