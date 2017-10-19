@@ -6,8 +6,13 @@
 /* track the closes object
  *
  * 1. scan field to find closest object (within a minimum distance)
- * 2. narrow scan object as it moves
- * 3. revert to full scan if lock is lost
+ * 2. narrow scan object and track it as it moves
+ *
+ * TODO: 
+ * - revert to full scan if lock is lost
+ * - steer rover to face target
+ * - drive rover towards target
+ * - stop at minimum distance
  */
 
 #define SCAN_STEP 2
