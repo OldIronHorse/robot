@@ -16,8 +16,10 @@
  * - stop at minimum distance
  */
 
-#if ARDUINO_VERSION < 108
+#ifndef UINT16_MAX 
 #define UINT16_MAX 65536
+#endif
+#ifndef LONG_MAX 
 #define LONG_MAX 2147483647L
 #endif
 
