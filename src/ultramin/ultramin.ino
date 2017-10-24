@@ -107,7 +107,7 @@ void loop(){
   int range = ranger.Ranging(CM);
   DEBUG_PRINT(F("range: "))
   DEBUG_PRINTLN(range)
-  toneAC(map(range, 10, 100, NOTE_B0, NOTE_DS8));
-  //toneAC(notes[map(range, 10, 100, 0, 91)]);
+  //toneAC(map(range, 10, 100, NOTE_B0, NOTE_DS8));
+  toneAC(notes[map(range, 10, 100, 0, 91)]);
   delay(1);
 }
