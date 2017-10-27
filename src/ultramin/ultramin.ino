@@ -5,7 +5,7 @@
 
 #include "pitches.h"
 
-int notes[] = {
+const int notes[] = {
   NOTE_B0,
   NOTE_C1,
   NOTE_CS1,
