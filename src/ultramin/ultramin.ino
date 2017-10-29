@@ -1,6 +1,6 @@
 #define DEBUG_OUTPUT
 #include <DebugUtils.h>
-#include <Ultrasonic.h>
+//#include <Ultrasonic.h>
 #include <toneAC.h>
 
 #include "pitches.h"
@@ -97,17 +97,46 @@ const int notes[] = {
   NOTE_DS8,
 };
 
-Ultrasonic ranger(12, 13);
+int tune[][2] = {
+  {NOTE_C5,1000},
+  {NOTE_D5,500},
+  {NOTE_E5,1000},
+  {NOTE_F5,500},
+  {NOTE_G5,1000},
+  {NOTE_A6,500},
+  {NOTE_B6,1000},
+  {NOTE_C6,500},
+  {0,0}
+};
+
+//Ultrasonic ranger(12, 13);
+int step = 0;
+int last_millis = 0;
 
 void setup(){
   DEBUG_INIT(9600)
+  pinMode(A0,INPUT);
+  step = 0;
 }
 
 void loop(){
-  int range = ranger.Ranging(CM);
-  DEBUG_PRINT(F("range: "))
-  DEBUG_PRINTLN(range)
-  //toneAC(map(range, 10, 100, NOTE_B0, NOTE_DS8));
-  toneAC(notes[map(range, 10, 100, 0, 91)]);
-  delay(1);
+  int current_millis = millis();
+  if(current_millis - last_millis > tune[step][1]){
+    last_millis = current_millis;
+    //int range = ranger.Ranging(CM);
+    //DEBUG_PRINT(F("range: "))
+    //DEBUG_PRINT(range)
+    //toneAC(map(range, 0, 1023, NOTE_B0, NOTE_DS8));
+    //toneAC(map(range, 10, 100, NOTE_B0, NOTE_DS8));
+    //toneAC(notes[map(range, 0, 1023, 0, 91)],5);
+    //toneAC(notes[map(range, 10, 100, 0, 91)]);
+    ++step;
+    if(0 == tune[step][0]){
+      step = 0;
+    }
+  }
+  int vol = map(analogRead(A0),0,1023,0,9);
+  DEBUG_PRINT(F(" vol: "))
+  DEBUG_PRINTLN(vol)
+  toneAC(tune[step][0],vol);
 }
