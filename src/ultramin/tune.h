@@ -1,69 +1,51 @@
 #ifndef TUNE_H
 #define TUNE_H
+
 #include "Note.h"
 
 #include <iostream>
 using namespace std;
 
-enum State {BEGIN,PITCH_NUM,INTRA_SEP,DUR,INTER_SEP};
+enum Parsing {PITCH,DURATION};
 
 void parse_tune(const char* szTune,  Note notes[]){
   cout << "Called with: " << szTune << endl;
-  State state = BEGIN;
+  const char* from = szTune;
+  const char* to = szTune;
+  cout << "*from: " << int(*from) << endl;
+  cout << "*from: " << *from << endl;
   int note_index = 0;
-  char note_alpha;
-  char note_num;
-  char dur[5];
-  int dur_index;
-  while(0 != szTune){
-    cout << "state = " << state << endl;
-    cout << " note_alpha = " << note_alpha << endl;
-    cout << " note_num = " << note_num << endl;
-    switch(state){
-      case BEGIN:
-        if(*szTune >= 'A' && *szTune <= 'G'){
-          note_alpha = *szTune;
-          state = PITCH_NUM;
-        }else{
-          return;
+  char buffer[10];
+  int pitch;
+  memset(buffer,0,10*sizeof(char));
+  Parsing parsing = PITCH;
+  while(0 != *to){
+    switch(parsing){
+      case PITCH:
+        if('|' == *to){
+          memcpy(buffer,from,to-from);
+          pitch = atoi(buffer);
+          memset(buffer,0,10*sizeof(char));
+          parsing = DURATION;
+          from = to + 1;
         }
         break;
-      case PITCH_NUM:
-        cout << "PITCH_NUM: " << szTune << endl;
-        if(*szTune >= '0' && *szTune <= '8'){
-          note_num = *szTune;
-          state = INTRA_SEP;
-        }else{
-          return;
+      case DURATION:
+        if(',' == *to || '\n' == *to){
+          memcpy(buffer,from,to-from);
+          notes[note_index]._pitch = pitch;
+          notes[note_index]._duration = atoi(buffer);
+          ++note_index;
+          memset(buffer,0,10*sizeof(char));
+          parsing = PITCH;
+          from = to + 1;
         }
         break;
-      case INTRA_SEP:
-        cout << "INTRA_SEP: " << szTune << endl;
-        if(*szTune == '|'){
-          state = DUR;
-          memset(dur,0,5*sizeof(char));
-          dur_index = 0;
-        }else{
-          return;
-        }
-        break;
-      case DUR:
-        cout << "DUR: " << szTune << endl;
-        if(*szTune >= '0' && *szTune <= '9' && dur_index < 5){
-          dur[dur_index] = *szTune;
-          ++dur_index;
-        }else{
-          notes[note_index]._duration = atoi(dur);
-          //TODO set pitch
-          state = BEGIN;
-        }
-        break;
-      default:
-        cout << "default: " << szTune << endl;
-        return;
     }
-    ++szTune;
+    ++to;
   }
+  notes[note_index]._pitch = 0;
+  notes[note_index]._duration = 0;
 }
 
 #endif //TUNE_H

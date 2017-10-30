@@ -11,16 +11,16 @@ std::ostream& operator<<(std::ostream& os, const Note& note){
 DEFINE_TEST(empty_tune)
   Note notes[100];
   parse_tune("\n",notes);
-  assertEqual(NOTE_NONE,notes[0]);
+  assertEqual(Note::NONE,notes[0]);
 }
 
 DEFINE_TEST(short_tune)
   Note notes[100];
-  parse_tune("B0|10,A4#|5,C8|12\n",notes);
-  assertEqual(Note(NOTE_B0,10),notes[0]);
-  assertEqual(Note(NOTE_AS4,5),notes[1]);
-  assertEqual(Note(NOTE_C8,12),notes[2]);
-  assertEqual(NOTE_NONE,notes[3]);
+  parse_tune("31|10,117|5,4186|12\n",notes);
+  assertEqual(Note(31,10),notes[0]);
+  assertEqual(Note(117,5),notes[1]);
+  assertEqual(Note(4186,12),notes[2]);
+  assertEqual(Note::NONE,notes[3]);
 }
 
 BEGIN_TEST_SUITE(tests_parse_tune)
