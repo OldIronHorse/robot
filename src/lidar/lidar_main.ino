@@ -2,6 +2,7 @@
 #include <DebugUtils.h>
 #include <Servo.h>
 #include <Ultrasonic.h>
+#include <Wire.h>
 #include <VL53L0X.h>
 
 VL53L0X lidar;
@@ -10,10 +11,25 @@ Servo scanner;
 
 void setup(){
   DEBUG_INIT(9600)
+  DEBUG_PRINTLN(F("Starting Wire..."))
+  Wire.begin();
+  DEBUG_PRINTLN(F("Initialising lidar..."))
+  lidar.init();
+  lidar.setTimeout(500);
+  lidar.setMeasurementTimingBudget(20000); // high speed
+  //lidar.setMeasurementTimingBudget(200000); // high accuracy
+  DEBUG_PRINTLN(F("Attaching scanner.."))
   scanner.attach(10);
+  DEBUG_PRINTLN(F("setup complete :-)"))
 }
 
 void loop(){
+  Serial.print(lidar.readRangeSingleMillimeters());
+  if(lidar.timeoutOccurred()){
+    Serial.print(F("TIMEOUT!"));
+  }
+  Serial.println();
+  /*
   for(int a = 0; a < 181; ++a){
     scanner.write(a);
     delay(10);
@@ -29,4 +45,5 @@ void loop(){
   DEBUG_PRINTLN()
   scanner.write(0);
   delay(1000);
+  */
 }
