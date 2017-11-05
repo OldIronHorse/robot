@@ -1,20 +1,22 @@
+#define DEBUG_OUTPUT
+#include <DebugUtils.h>
 #include <UnoWiFiDevEd.h>
 #include <IRremote.h>
-#include <Servo.h>
 #include <rover.h>
 #include <ir_cmd.h>
+#include <Wire.h>
+#include <VL53L0X.h>
 #include "avoid.h"
 #include "scan.h"
 #include "streamscan.h"
 
 //TODO: Control via WiFi and telnet
 
-Servo scanner;
 Rover rover;
-Ultrasonic ranger(12, 13);
-Avoid avoid(rover, ranger);
-Scan scan(rover, ranger, scanner);
-StreamScan stream_scan(rover, ranger, scanner, Wifi);
+VL53L0X lidar;
+Avoid avoid(rover, lidar);
+Scan scan(rover, lidar);
+StreamScan stream_scan(rover, lidar, Wifi);
 IRrecv ir_recv(9);
 decode_results results;
 enum Mode {REMOTE, AVOID, SCAN, STREAM_SCAN};
@@ -23,8 +25,13 @@ unsigned int speed = Rover::max_speed;
 unsigned int last_cmd = ir_cmd::none;
 
 void setup(){
+  DEBUG_INIT(9600)
   Wifi.begin();
-  scanner.attach(10);
+  Wire.begin();
+  lidar.init();
+  lidar.setTimeout(500);
+  lidar.setMeasurementTimingBudget(20000); // high speed
+  //lidar.setMeasurementTimingBudget(200000); // high accuracy
   rover.setup();
   avoid.setup(speed);
   scan.setup(speed);
@@ -48,7 +55,6 @@ void loop(){
         break;
       case ir_cmd::d2:
         mode = AVOID;
-        scanner.write(90);
         rover.forward(speed);
         Wifi.println("mode = AVOID");
         break;

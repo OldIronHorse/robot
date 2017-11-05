@@ -24,15 +24,17 @@ void setup(){
 }
 
 void loop(){
+  /*
   Serial.print(lidar.readRangeSingleMillimeters());
   if(lidar.timeoutOccurred()){
     Serial.print(F("TIMEOUT!"));
   }
   Serial.println();
-  /*
-  for(int a = 0; a < 181; ++a){
+  */
+  for(int a = 0; a < 181; a += 10){
+    DEBUG_PRINT(F("scanner.write "))
+    DEBUG_PRINTLN(a)
     scanner.write(a);
-    delay(10);
     uint16_t l_range = lidar.readRangeSingleMillimeters();
     int u_range = ranger.Ranging(CM);
     DEBUG_PRINT(a)
@@ -45,5 +47,4 @@ void loop(){
   DEBUG_PRINTLN()
   scanner.write(0);
   delay(1000);
-  */
 }

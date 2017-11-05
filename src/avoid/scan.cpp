@@ -1,30 +1,28 @@
 #include "scan.h"
 
 void Scan::setup(unsigned int speed){
-  _lidar.init();
 }
 
 void Scan::loop(unsigned int speed){
   if(_running){
-    int range = _ranger.Ranging(CM);
-    if(range < 50){
+    uint16_t range = _lidar.readRangeSingleMillimeters();
+    if(range < 250){
       _rover.stop();
       _running = false;
     }
   }else{
     // scan
-    int max_range = 0;
-    int max_range_angle = 0;
-    for(int angle = 0; angle <= 180; angle += 10){
-      _scanner.write(angle);
+    uint16_t max_range = 0;
+    uint16_t max_range_angle = 0;
+    for(uint16_t angle = 0; angle <= 180; angle += 10){
+      //TODO: turn rover
       delay(100);
-      int range = _ranger.Ranging(CM);
-      if(range > max_range && range < 1000){
+      uint16_t range = _lidar.readRangeSingleMillimeters();
+      if(range > max_range){
         max_range = range;
         max_range_angle = angle;
       }
     }
-    _scanner.write(90);
     // turn
     if(max_range_angle > 90){
       // turn right
@@ -50,7 +48,6 @@ void Scan::loop(unsigned int speed){
 
 void Scan::start(unsigned int speed){
   _running = true;
-  _scanner.write(90);
   _rover.forward(speed);
   loop(speed);
 }

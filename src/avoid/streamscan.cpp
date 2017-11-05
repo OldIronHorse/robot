@@ -2,8 +2,8 @@
 
 void StreamScan::loop(unsigned int speed){
   if(_running){
-    int range = _ranger.Ranging(CM);
-    if(range < 50){
+    uint16_t range = _lidar.readRangeSingleMillimeters();
+    if(range < 250){
       _rover.stop();
       _running = false;
     }
@@ -13,23 +13,19 @@ void StreamScan::loop(unsigned int speed){
     int max_range = 0;
     int max_range_angle = 0;
     for(int angle = 0; angle <= 180; angle += 10){
-      _scanner.write(angle);
+      //TODO: Rotate rover
       delay(100);
-      uint16_t lRange = _lidar.readRangeSingleMillimeters();
-      int range = _ranger.Ranging(CM);
+      uint16_t range = _lidar.readRangeSingleMillimeters();
       _stream.print("|");
       _stream.print(angle);
       _stream.print(":");
       _stream.print(range);
-      _stream.print(":");
-      _stream.print(lRange);
-      if(range > max_range && range < 1000){
+      if(range > max_range){
         max_range = range;
         max_range_angle = angle;
       }
     }
     _stream.println();
-    _scanner.write(90);
     // turn
     if(max_range_angle > 90){
       // turn right

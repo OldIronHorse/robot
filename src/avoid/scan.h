@@ -3,23 +3,19 @@
 
 #include <Arduino.h>
 #include <rover.h>
-#include <Servo.h>
-#include <Ultrasonic.h>
 #include <VL53L0X.h>
 
 class Scan{
   protected:
     Rover &_rover;
-    Ultrasonic &_ranger;
-    VL53L0X _lidar;
+    VL53L0X &_lidar;
     bool _running;
     int _angle;
     int _step;
 
   public:
-    Servo &_scanner;
-    Scan(Rover &rover_, Ultrasonic &ranger_, Servo &scanner_)
-      :_rover(rover_), _scanner(scanner_), _ranger(ranger_),
+    Scan(Rover &rover_, VL53L0X &lidar_)
+      :_rover(rover_), _lidar(lidar_),
        _running(true), _angle(0), _step(5){;}
 
     void setup(unsigned int speed);

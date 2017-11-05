@@ -1,6 +1,6 @@
 BOARD_TAG=uno
 ARDUINO_PORT=/dev/ttyACM*
-ARDUINO_LIBS=IRremote IRCmd Servo Ultrasonic rover UnoWiFi-Developer-Edition-Lib Wire vl53l0x-arduino DebugUtils
+ARDUINO_LIBS=IRremote IRCmd rover UnoWiFi-Developer-Edition-Lib Wire vl53l0x-arduino DebugUtils
 USER_LIB_PATH=../../libraries
 OS := $(shell uname)
 ifeq ($(OS), Darwin)

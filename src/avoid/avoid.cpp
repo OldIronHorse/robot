@@ -1,3 +1,5 @@
+#define DEBUG_OUTPUT
+#include <DebugUtils.h>
 #include <Arduino.h>
 #include "avoid.h"
 
@@ -26,15 +28,16 @@ void Avoid::setup(unsigned int speed){
 }
 
 void Avoid::loop(unsigned int speed){
-  int range = ranger.Ranging(CM);
+  uint16_t range = lidar.readRangeSingleMillimeters();
+  DEBUG_PRINTLN(int(range))
   switch(state){
     case running:
-      if(range < min_range_cm){
+      if(range < min_range_mm){
         enter_obstructed(speed);
       }
       break;
     case obstructed:
-      if(range > go_range_cm){
+      if(range > go_range_mm){
         enter_running(speed);
       }
       break;
