@@ -10,13 +10,15 @@ class Scan{
     Rover &_rover;
     VL53L0X &_lidar;
     bool _running;
-    int _angle;
-    int _step;
+    int _turn_index;
+    int _max_range_turn_index;
+    uint16_t _max_range;
+    unsigned long _last_ranging_ms;
 
   public:
     Scan(Rover &rover_, VL53L0X &lidar_)
       :_rover(rover_), _lidar(lidar_),
-       _running(true), _angle(0), _step(5){;}
+       _running(true){;}
 
     void setup(unsigned int speed);
     void loop(unsigned int speed);

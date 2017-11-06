@@ -23,6 +23,18 @@ class Rover{
       calls.push_back("stop()");
     }
 
+    void right(unsigned int speed){
+      stringstream s;
+      s << "right(" << speed << ")";
+      calls.push_back(s.str());
+    }
+
+    void left(unsigned int speed){
+      stringstream s;
+      s << "left(" << speed << ")";
+      calls.push_back(s.str());
+    }
+
     void turn_right_10(){
       calls.push_back("turn_right_10()");
     }

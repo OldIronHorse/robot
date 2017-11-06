@@ -1,5 +1,8 @@
 #include "scan.h"
 
+#define TURN_STEP_MS 100
+#define MAX_TURN_STEPS 36
+
 void Scan::setup(unsigned int speed){
 }
 
@@ -9,39 +12,29 @@ void Scan::loop(unsigned int speed){
     if(range < 250){
       _rover.stop();
       _running = false;
+      _turn_index = 0;
+      _max_range = range;
+      _max_range_turn_index = 0;
+      _last_ranging_ms = millis();
+      _rover.right(Rover::max_speed);
     }
   }else{
     // scan
-    uint16_t max_range = 0;
-    uint16_t max_range_angle = 0;
-    for(uint16_t angle = 0; angle <= 180; angle += 10){
-      //TODO: turn rover
-      delay(100);
+    if(millis() - _last_ranging_ms > TURN_STEP_MS){
+      _rover.stop();
+      ++_turn_index;
       uint16_t range = _lidar.readRangeSingleMillimeters();
-      if(range > max_range){
-        max_range = range;
-        max_range_angle = angle;
+      if(range > _max_range){
+        _max_range = range;
+        _max_range_turn_index = _turn_index;
+      }
+      _rover.right(Rover::max_speed);
+      if(_turn_index >= MAX_TURN_STEPS){
+        delay(_max_range_turn_index * TURN_STEP_MS);
+        _rover.forward(speed);
+        _running = true;
       }
     }
-    // turn
-    if(max_range_angle > 90){
-      // turn right
-      int turn_count = (max_range_angle - 90)/10;
-      for(int i = 0; i < turn_count; ++i){
-        _rover.back_curve(0, Rover::max_speed);
-        delay(200);
-      }
-    }else if(max_range_angle < 90){
-      // turn left
-      int turn_count = (90 - max_range_angle)/10;
-      for(int i = 0; i < turn_count; ++i){
-        _rover.back_curve(Rover::max_speed, 0);
-        delay(200);
-      }
-    }
-    // move
-    _running = true;
-    _rover.forward(speed);
   }
 }
 
