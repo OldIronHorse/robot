@@ -4,15 +4,15 @@
 #include <Arduino.h>
 #include <Servo.h>
 #include <rover.h>
+#include <VL53L0X.h>
 #include "../avoid.h"
 #include "../streamscan.h"
 
 Rover rover;
-Ultrasonic ranger(12, 13);
+VL53L0X ranger;
 Avoid avoid(rover, ranger);
-Servo scanner;
 Stream io_stream;
-StreamScan scan(rover, ranger, scanner, io_stream);
+StreamScan scan(rover, ranger, io_stream);
 
 void set_up() {
   MockArduino::instance().reset();
@@ -23,44 +23,43 @@ void set_up() {
 
 //Avoid
 DEFINE_TEST(no_obstruction)
-  ranger.distance_cm = 35;
+  ranger._distance_mm = 350;
   avoid.loop(200);
   assertEqual("forward(10)", rover.calls.back());
 }
 
 DEFINE_TEST(obstruction_go_left)
   MockArduino::instance().random_values.push_back(1);
-  ranger.distance_cm = 10;
+  ranger._distance_mm = 100;
   avoid.loop(250);
   assertEqual("back_curve(0, 250)", rover.calls.back());
 }
 
 DEFINE_TEST(obstruction_go_right)
   MockArduino::instance().random_values.push_back(0);
-  ranger.distance_cm = 10;
+  ranger._distance_mm = 100;
   avoid.loop(205);
   assertEqual("back_curve(205, 0)", rover.calls.back());
 }
 
 DEFINE_TEST(obstruction_cleared)
   MockArduino::instance().random_values.push_back(0);
-  ranger.distance_cm = 10;
+  ranger._distance_mm = 100;
   avoid.loop(200);
-  ranger.distance_cm = 135;
+  ranger._distance_mm = 1350;
   avoid.loop(255);
   assertEqual("forward(255)", rover.calls.back());
 }
 
 //Scan
 DEFINE_TEST(scan_start_no_obstruction)
-  ranger.distance_cm = 50;
+  ranger._distance_mm = 500;
   scan.start(100);
-  assertEqual(90, scanner.m_angle);
   assertEqual("forward(100)", rover.calls.back());
 }
 
 DEFINE_TEST(scan_no_obstruction)
-  ranger.distance_cm = 50;
+  ranger._distance_mm = 500;
   scan.start(100);
   scan.loop(100);
   assertEqual("forward(100)", rover.calls.back());

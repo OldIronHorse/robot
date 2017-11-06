@@ -116,6 +116,8 @@ T max(T a, T b){
   return ((a)>(b)?(a):(b));
 }
 
+#define boolean bool
+
 #define F(a) a
 #define PSTR(a) a
 #define PROGMEM
