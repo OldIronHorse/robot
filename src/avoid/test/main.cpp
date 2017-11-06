@@ -6,13 +6,12 @@
 #include <rover.h>
 #include <VL53L0X.h>
 #include "../avoid.h"
-#include "../streamscan.h"
+#include "../scan.h"
 
 Rover rover;
 VL53L0X ranger;
 Avoid avoid(rover, ranger);
-Stream io_stream;
-StreamScan scan(rover, ranger, io_stream);
+Scan scan(rover, ranger);
 
 void set_up() {
   MockArduino::instance().reset();
@@ -64,6 +63,51 @@ DEFINE_TEST(scan_no_obstruction)
   scan.loop(100);
   assertEqual("forward(100)", rover.calls.back());
 }
+
+DEFINE_TEST(scan_obstruction_initial)
+  ranger._distance_mm = 500;
+  scan.start(100);
+  scan.loop(100);
+  ranger._distance_mm = 15;
+  scan.loop(100);
+  assertEqual("right(255)", rover.calls.back());
+}
+
+DEFINE_TEST(scan_obstruction_scan)
+  //TODO: fix the mapping or orientation to range
+  list<uint16_t> ranges = {
+    25,24,23,22,21,20,19,18,17,16,
+    25,24,23,22,21,20,19,18,17,16,
+    25,24,23,99,21,20,19,18,17,16,
+    25,24,23,22,21,20,19,18,17,16,
+    25,24,23,22,21,20,19,18,17,16,
+    25,24,23,22,21,20,19,18,17,16,
+    25,24,23,22,21,20,19,18,17,16};
+  ranger._distance_mm = 500;
+  scan.start(100);
+  scan.loop(100);
+  ranger._distance_mm = 15;
+  int j = 0;
+  do{
+    cout << j << ":" << millis() << ":" << ranger._distance_mm << endl;
+    scan.loop(100);
+    MockArduino::instance().millis += 10;
+    ranger._distance_mm = ranges.front();
+    ranges.pop_front();
+    ++j;
+  }while(rover.calls.back() != "left(255)" && !ranges.empty());
+  /*
+  while(rover.calls.back() != "forward(100)"){
+    scan.loop(100);
+  }
+  */
+  for(vector<string>::iterator i = rover.calls.begin(); i != rover.calls.end(); ++i){
+    cout << *i << " ";
+  }
+  cout << endl;
+  assertEqual(99,scan._max_range);
+  assertEqual(24,scan._max_range_turn_index);
+}
 //TODO stop, scan. turn tests
 
 BEGIN_TEST_SUITE(tests_avoid)
@@ -76,16 +120,9 @@ END_TEST_SUITE
 BEGIN_TEST_SUITE(tests_scan)
 ADD_TEST(scan_start_no_obstruction)
 ADD_TEST(scan_no_obstruction)
+ADD_TEST(scan_obstruction_initial)
+ADD_TEST(scan_obstruction_scan)
 END_TEST_SUITE
-
-//TODO Is the macro version really better?
-TestFunc tests[] = {&no_obstruction,
-                    &obstruction_go_left,
-                    &obstruction_go_right,
-                    &obstruction_cleared,
-                    &scan_start_no_obstruction,
-                    &scan_no_obstruction,
-                    0};
 
 int main(void) {
   return run(tests_avoid, set_up) +

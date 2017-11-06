@@ -8,7 +8,6 @@
 #include <VL53L0X.h>
 #include "avoid.h"
 #include "scan.h"
-#include "streamscan.h"
 
 //TODO: Control via WiFi and telnet
 
@@ -16,10 +15,9 @@ Rover rover;
 VL53L0X lidar;
 Avoid avoid(rover, lidar);
 Scan scan(rover, lidar);
-StreamScan stream_scan(rover, lidar, Wifi);
 IRrecv ir_recv(9);
 decode_results results;
-enum Mode {REMOTE, AVOID, SCAN, STREAM_SCAN};
+enum Mode {REMOTE, AVOID, SCAN};
 Mode mode;
 unsigned int speed = Rover::max_speed;
 unsigned int last_cmd = ir_cmd::none;
@@ -63,11 +61,6 @@ void loop(){
         scan.start(speed);
         Wifi.println("mode = SCAN");
         break;
-      case ir_cmd::d4:
-        mode = STREAM_SCAN;
-        stream_scan.start(speed);
-        Wifi.println("mode = STREAM_SCAN");
-        break;
       case ir_cmd::vol_up:
         speed = min(speed + 5, Rover::max_speed);
         if(AVOID == mode){
@@ -87,9 +80,6 @@ void loop(){
     }
   }
   switch(mode){
-    case STREAM_SCAN:
-      stream_scan.loop(speed);
-      break;
     case SCAN:
       scan.loop(speed);
       break;

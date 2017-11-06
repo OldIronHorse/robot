@@ -6,10 +6,11 @@
 #include <VL53L0X.h>
 
 class Scan{
-  protected:
+  public:
     Rover &_rover;
     VL53L0X &_lidar;
-    bool _running;
+    enum State {FORWARD,SCAN,TURN};
+    State _state;
     int _turn_index;
     int _max_range_turn_index;
     uint16_t _max_range;
@@ -18,7 +19,7 @@ class Scan{
   public:
     Scan(Rover &rover_, VL53L0X &lidar_)
       :_rover(rover_), _lidar(lidar_),
-       _running(true){;}
+       _state(FORWARD){;}
 
     void setup(unsigned int speed);
     void loop(unsigned int speed);
