@@ -1,4 +1,4 @@
-#define DEBUG_OUTPUT
+#define WIFI_OUTPUT
 #include <DebugUtils.h>
 #include <UnoWiFiDevEd.h>
 #include <IRremote.h>
@@ -24,7 +24,6 @@ unsigned int last_cmd = ir_cmd::none;
 
 void setup(){
   DEBUG_INIT(9600)
-  Wifi.begin();
   Wire.begin();
   lidar.init();
   lidar.setTimeout(500);
@@ -36,8 +35,8 @@ void setup(){
   ir_recv.enableIRIn();
   mode = REMOTE;
   rover.stop();
-  Wifi.println("Rover started.");
-  Wifi.println("mode = REMOTE");
+  DEBUG_PRINTLN("Rover started.");
+  DEBUG_PRINTLN("mode = REMOTE");
 }
 
 void loop(){
@@ -49,17 +48,17 @@ void loop(){
       case ir_cmd::d1:
         mode = REMOTE;
         rover.stop();
-        Wifi.println("mode = REMOTE");
+        DEBUG_PRINTLN("mode = REMOTE");
         break;
       case ir_cmd::d2:
         mode = AVOID;
         rover.forward(speed);
-        Wifi.println("mode = AVOID");
+        DEBUG_PRINTLN("mode = AVOID");
         break;
       case ir_cmd::d3:
         mode = SCAN;
         scan.start(speed);
-        Wifi.println("mode = SCAN");
+        DEBUG_PRINTLN("mode = SCAN");
         break;
       case ir_cmd::vol_up:
         speed = min(speed + 5, Rover::max_speed);

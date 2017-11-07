@@ -1,4 +1,4 @@
-#define DEBUG_OUTPUT
+#define WIFI_OUTPUT
 #include <DebugUtils.h>
 #include <Arduino.h>
 #include "avoid.h"
