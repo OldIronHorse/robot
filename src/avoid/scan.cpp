@@ -42,7 +42,7 @@ void Scan::loop(unsigned int speed){
       break;
     case TURN:
         uint16_t range = _lidar.readRangeContinuousMillimeters();
-        if(range >= _max_range - 5){
+        if(range + 5 >= _max_range){
           _rover.forward(speed);
           _state = FORWARD;
         }

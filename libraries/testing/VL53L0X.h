@@ -3,6 +3,9 @@
 
 class VL53L0X{
   public:
+    uint16_t readRangeContinuousMillimeters(void){
+      return _distance_mm;
+    }
     uint16_t readRangeSingleMillimeters(void){
       return _distance_mm;
     }

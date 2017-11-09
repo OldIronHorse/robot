@@ -89,9 +89,8 @@ DEFINE_TEST(scan_obstruction_scan)
   ranger._distance_mm = 15;
   int j = 0;
   do{
-    cout << j << ":" << millis() << ":" << ranger._distance_mm << endl;
     scan.loop(100);
-    MockArduino::instance().millis += 10;
+    MockArduino::instance().millis += 110;
     ranger._distance_mm = ranges.front();
     ranges.pop_front();
     ++j;
