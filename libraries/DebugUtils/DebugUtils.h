@@ -36,6 +36,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   Serial.print(__LINE__);     \
   Serial.print(' ');      \
   Serial.println(str);
+#elseif WIFI_OUTPUT
+#define DEBUG_INIT(speed) Wifi.begin();
+#define DEBUG_PRINT(str) Wifi.print(str)
+#define DEBUG_PRINTLN(str) Wifi.printlin(str)
+#define DEBUG_PRETTYPRINT(str) \
+  Wifi.print(millis());     \
+  Wifi.print(": ");    \
+  Wifi.print(__PRETTY_FUNCTION__); \
+  Wifi.print(' ');      \
+  Wifi.print(__FILE__);     \
+  Wifi.print(':');      \
+  Wifi.print(__LINE__);     \
+  Wifi.print(' ');      \
+  Wifi.println(str);
 #else
 #define DEBUG_INIT(speed)
 #define DEBUG_PRINT(str)

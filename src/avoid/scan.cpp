@@ -1,8 +1,10 @@
+#define WIFI_OUTPUT
+#include <DebugUtils.h>
 #include "scan.h"
 #include <iostream>
 using namespace std;
 
-#define TURN_STEP_MS 100
+#define TURN_STEP_MS 75
 #define MAX_TURN_STEPS 36
 
 void Scan::setup(unsigned int speed){
@@ -13,7 +15,7 @@ void Scan::loop(unsigned int speed){
   switch(_state){
     case FORWARD:{
         uint16_t range = _lidar.readRangeSingleMillimeters();
-        if(range < 250){
+        if(range < 150){
           _rover.stop();
           _state = SCAN;
           _turn_index = 0;

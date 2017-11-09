@@ -11,8 +11,8 @@
 
 class Avoid{
   public: 
-    const static uint16_t min_range_mm = 300;
-    const static uint16_t go_range_mm = 500;
+    const static uint16_t min_range_mm = 150;
+    const static uint16_t go_range_mm = 300;
 
   private:
     VL53L0X &lidar;
