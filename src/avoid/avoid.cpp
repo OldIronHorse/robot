@@ -28,7 +28,8 @@ void Avoid::setup(unsigned int speed){
 }
 
 void Avoid::loop(unsigned int speed){
-  uint16_t range = lidar.readRangeSingleMillimeters();
+  //uint16_t range = lidar.readRangeSingleMillimeters();
+  uint16_t range = lidar.readRangeContinuousMillimeters();
   DEBUG_PRINTLN(int(range))
   switch(state){
     case running:

@@ -11,7 +11,7 @@ void Scan::setup(unsigned int speed){
 void Scan::loop(unsigned int speed){
   switch(_state){
     case FORWARD:{
-        uint16_t range = _lidar.readRangeSingleMillimeters();
+        uint16_t range = _lidar.readRangeContinuousMillimeters();
         if(range < 150){
           _rover.stop();
           _state = SCAN;
@@ -27,7 +27,7 @@ void Scan::loop(unsigned int speed){
       if(millis() - _last_ranging_ms > TURN_STEP_MS){
         _rover.stop();
         ++_turn_index;
-        uint16_t range = _lidar.readRangeSingleMillimeters();
+        uint16_t range = _lidar.readRangeContinuousMillimeters();
         if(range > _max_range){
           _max_range = range;
           _max_range_turn_index = _turn_index;
@@ -41,7 +41,7 @@ void Scan::loop(unsigned int speed){
       }
       break;
     case TURN:
-        uint16_t range = _lidar.readRangeSingleMillimeters();
+        uint16_t range = _lidar.readRangeContinuousMillimeters();
         if(range >= _max_range - 5){
           _rover.forward(speed);
           _state = FORWARD;

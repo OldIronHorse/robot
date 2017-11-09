@@ -27,8 +27,9 @@ void setup(){
   Wire.begin();
   lidar.init();
   lidar.setTimeout(500);
-  lidar.setMeasurementTimingBudget(20000); // high speed
+  //lidar.setMeasurementTimingBudget(20000); // high speed
   //lidar.setMeasurementTimingBudget(200000); // high accuracy
+  lidar.startContinuous(); // continuous ranging
   rover.setup();
   avoid.setup(speed);
   scan.setup(speed);
