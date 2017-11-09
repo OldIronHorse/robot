@@ -1,4 +1,6 @@
 #include "scan.h"
+#include <iostream>
+using namespace std;
 
 #define TURN_STEP_MS 100
 #define MAX_TURN_STEPS 36
@@ -7,6 +9,7 @@ void Scan::setup(unsigned int speed){
 }
 
 void Scan::loop(unsigned int speed){
+  cout << "_state:" << _state << endl;
   switch(_state){
     case FORWARD:{
         uint16_t range = _lidar.readRangeSingleMillimeters();
@@ -40,7 +43,7 @@ void Scan::loop(unsigned int speed){
       break;
     case TURN:
         uint16_t range = _lidar.readRangeSingleMillimeters();
-        if(max(range,_max_range) - min(range,_max_range) < 5){
+        if(range + 5 >= _max_range){
           _rover.forward(speed);
           _state = FORWARD;
         }
