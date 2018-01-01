@@ -146,7 +146,8 @@ CiaoData responseREAD(){
 	memset(cstr, 0, 8);
 
 	int ret = rest.getResponse(response, 64);
-	//espSerial.println(ret);
+	espSerial.println(ret);
+	espSerial.println(response);
 
 	snprintf(cstr,8,"%d",ret);
 
@@ -156,22 +157,22 @@ CiaoData responseREAD(){
 
 	return ciao_data;
 }
-CiaoData requestPOST(const char* hostname, String data){
-	rest.begin(hostname);
+CiaoData requestPOST(const char* hostname, int port, String data){
+	rest.begin(hostname, port, false);
 	//delay(1000);	fix
 	//esp.process();
 	rest.post((const char*) data.c_str(),0);
 	return responseREAD();
 }
-CiaoData requestGET(const char* hostname, String data){
+CiaoData requestGET(const char* hostname, int port, String data){
 
-	rest.begin(hostname);
+	rest.begin(hostname, port, false);
 	//delay(1000);   fix
 	//esp.process();
 	rest.get((const char*) data.c_str());
 	return responseREAD();
 }
-CiaoData PassThroughRead(const char* connector, const char* hostname, String data, const char* method){
+CiaoData PassThroughRead(const char* connector, const char* hostname, String data, const char* method, int port=80){
 
 
 	//short mode = 0;
@@ -179,10 +180,10 @@ CiaoData PassThroughRead(const char* connector, const char* hostname, String dat
 	if (!strcmp(connector, "rest")){
 		//mode = 0;
 		if (!strcmp(method, "GET")){
-			return requestGET(hostname, data);
+			return requestGET(hostname, port, data);
 		}
 		else if (!strcmp(method, "POST")){
-			return requestPOST(hostname, data);
+			return requestPOST(hostname, port, data);
 		}
 		else{
 			CiaoData ciao_data;
@@ -223,16 +224,16 @@ CiaoData PassThroughRead(const char* connector, const char* hostname, String dat
 	}
 }
 
-CiaoData PassThroughWrite(const char* connector, const char* hostname, String data, const char* method){
+CiaoData PassThroughWrite(const char* connector, const char* hostname, String data, const char* method, int port=80){
 
 	//short mode = 0;
 	if (!strcmp(connector, "rest")){
 		//mode = 0;
 		if (!strcmp(method, "GET")){
-			return requestGET(hostname, data);
+			return requestGET(hostname, port, data);
 		}
 		else if (!strcmp(method, "POST")){
-			return requestPOST(hostname, data);
+			return requestPOST(hostname, port, data);
 		}
 		else{
 			CiaoData ciao_data;
@@ -267,6 +268,10 @@ CiaoData CiaoClass::read(const char* connector, const char* hostname, const char
 
 CiaoData CiaoClass::write(const char* connector, const char* hostname, const char* data, const char* method) {
 	return PassThroughWrite(connector, hostname, data, method);
+}
+
+CiaoData CiaoClass::write(const char* connector, const char* hostname, int port, const char* data, const char* method) {
+	return PassThroughWrite(connector, hostname, data, method, port);
 }
 
 CiaoData CiaoClass::read( const char* connector, const char* hostname, String data, String method){

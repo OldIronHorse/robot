@@ -113,9 +113,10 @@ public:
   boolean waitReturn(uint32_t timeout);
   boolean waitReturn();
 
-private:
+//private:
   Stream *_serial;
 
+private:
   boolean _debugEn;
   PROTO _proto;
   uint8_t _protoBuf[512];

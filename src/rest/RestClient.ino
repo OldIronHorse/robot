@@ -11,6 +11,20 @@ http://www.arduino.org/learning/tutorials/boards-tutorials/restserver-and-restcl
 #include <Wire.h>
 #include <UnoWiFiDevEd.h>
 
+void doRequest(const char* conn, const char* server, const int port, const char* command, const char* method){
+	CiaoData data = Ciao.write(conn, server, port, command, method);
+	if (!data.isEmpty()){
+		Ciao.println( "State: " + String (data.get(1)) );
+		Ciao.println( "Response: " + String (data.get(2)) );
+		Serial.println( "State: " + String (data.get(1)) );
+		Serial.println( "Response: " + String (data.get(2)) );
+	}
+	else{
+		Ciao.println ("Write Error");
+		Serial.println ("Write Error");
+	}
+}
+
 void setup() {
 
 	const char* connector = "rest";
@@ -25,23 +39,10 @@ void setup() {
 	pinMode(2, INPUT);
 
 	delay(10000);
-	doRequest(connector, server, resource, method);
+	doRequest(connector, server, port, resource, method);
 }
 
 void loop() {
 
 }
 
-void doRequest(const char* conn, const char* server, const char* command, const char* method){
-	CiaoData data = Ciao.write(conn, server, command, method);
-	if (!data.isEmpty()){
-		Ciao.println( "State: " + String (data.get(1)) );
-		Ciao.println( "Response: " + String (data.get(2)) );
-		Serial.println( "State: " + String (data.get(1)) );
-		Serial.println( "Response: " + String (data.get(2)) );
-	}
-	else{
-		Ciao.println ("Write Error");
-		Serial.println ("Write Error");
-	}
-}
