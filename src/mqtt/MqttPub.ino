@@ -28,8 +28,7 @@ WifiData espSerial;
 ESP esp(&espSerial);
 MQTT mqtt(&esp);
 
-void mqttData(void* response)
-{
+void mqttData(void* response){
   RESPONSE res(response);
 	String mqtt_topic = res.popString();
 	String mqtt_data = res.popString();
@@ -43,6 +42,28 @@ void mqttData(void* response)
   lcd.print(mqtt_data);
 }
 
+void mqttPublished(void* response){
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Published!");
+  delay(500);
+}
+
+void mqttConnected(void* response){
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Connected!");
+  delay(500);
+}
+
+void mqttDisconnected(void* response){
+  //lcd.clear();
+  //lcd.setCursor(0,0);
+  //lcd.print("Disconnected!");
+  espSerial.println("Disconnected!");
+  delay(500);
+}
+
 void setup(){
   lcd.begin(16,2);
   lcd.setCursor(0,0);
@@ -54,18 +75,29 @@ void setup(){
 	delay(1000);
   espSerial.println("\nStarting...");
   mqtt.dataCb.attach(mqttData);
+  //mqtt.connectedCb.attach(mqttData);
+  //mqtt.disconnectedCb.attach(mqttData);
+  //mqtt.publishedCb.attach(mqttData);
   if(mqtt.begin("arduino","","",60,true)){
     espSerial.println("\tMQTT started.");
   }
   mqtt.subscribe("arduino/data",0);
   mqtt.subscribe("arduino/now_playing",0);
   mqtt.subscribe("squeezebox/kitchen/now_playing",0);
-  lcd.clear();
-  lcd.setCursor(0,0);
-  lcd.print("Ready.");
+  //lcd.clear();
+  //lcd.setCursor(0,0);
+  //lcd.print("Ready.");
 }
 
+unsigned long last_pub = 0;
+
 void loop(){
+  if(millis() - last_pub > 10000){
+    last_pub = millis();
+    char buff[64];
+    sprintf(buff,"last_pub:%lu",last_pub);
+    mqtt.publish("arduino/analog/A1", buff);
+  }
   esp.process();
 }
 
