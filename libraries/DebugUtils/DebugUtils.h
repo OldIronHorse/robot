@@ -36,10 +36,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   Serial.print(__LINE__);     \
   Serial.print(' ');      \
   Serial.println(str);
-#elseif WIFI_OUTPUT
+#elif defined(WIFI_OUTPUT)
+#include <UnoWiFiDevEd.h>
 #define DEBUG_INIT(speed) Wifi.begin();
-#define DEBUG_PRINT(str) Wifi.print(str)
-#define DEBUG_PRINTLN(str) Wifi.printlin(str)
+#define DEBUG_PRINT(str) Wifi.print(str);
+#define DEBUG_PRINTLN(str) Wifi.println(str);
 #define DEBUG_PRETTYPRINT(str) \
   Wifi.print(millis());     \
   Wifi.print(": ");    \

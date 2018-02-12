@@ -14,10 +14,9 @@ http://www.arduino.org/learning/tutorials/boards-tutorials/restserver-and-restcl
 void setup() {
 
 	const char* connector = "rest";
-	const char* server = "www.google.co.uk";
-  const int port = 9000;
+	const char* server = "download.arduino.org";
 	const char* method = "GET";
-	const char* resource = "/index.html";
+	const char* resource = "/latest.txt";
 
 	Serial.begin(9600);
 	Ciao.begin();

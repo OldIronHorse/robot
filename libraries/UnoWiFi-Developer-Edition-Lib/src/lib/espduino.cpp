@@ -251,12 +251,9 @@ boolean ESP::waitReturn()
 }
 void ESP::process()
 {
-  //_serial->println("ESP::process called");
   char value;
   while(_serial->available()) {
     value = _serial->read();
-    //_serial->print("ESP::process read: ");
-    //_serial->println((int)value);
     switch(value){
     case 0x7D:
       _proto.isEsc = 1;

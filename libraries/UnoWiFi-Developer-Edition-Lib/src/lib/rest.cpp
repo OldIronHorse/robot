@@ -13,7 +13,6 @@ REST::REST(ESP *e)
 }
 void REST::restCallback(void *resp)
 {
-  esp->_serial->println("REST:restCallback called.");
   response = true;
   res = resp;
 }

@@ -31,7 +31,6 @@ class CiaoClass : public WifiData
 		void begin();
 		CiaoData read( const char* connector, const char* hostname, const char* data, const char* method = "GET");
 		CiaoData write( const char* connector, const char* hostname, const char* data, const char* method = "GET");
-		CiaoData write( const char* connector, const char* hostname, int port, const char* data, const char* method = "GET");
 
 		CiaoData read( const char* connector, const char* hostname, String data, String method = "GET");
 		CiaoData write( const char* connector, const char* hostname, String data, String method = "GET");
