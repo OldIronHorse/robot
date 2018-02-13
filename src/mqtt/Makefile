@@ -1,6 +1,6 @@
 BOARD_TAG=uno
 ARDUINO_PORT=/dev/ttyACM*
-ARDUINO_LIBS=Wire UnoWiFi-Developer-Edition-Lib Ultrasonic DebugUtils
+ARDUINO_LIBS=Wire UnoWiFi-Developer-Edition-Lib DebugUtils LiquidCrystal
 USER_LIB_PATH=../../libraries
 OS := $(shell uname)
 ifeq ($(OS), Darwin)

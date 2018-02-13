@@ -11,54 +11,52 @@ Note: works only with Arduino Uno WiFi Developer Edition.
 
 #include <Wire.h>
 #include <UnoWiFiDevEd.h>
-#include <Ultrasonic.h>
+#include <LiquidCrystal.h>
 
-//#define DEBUG_OUTPUT
+#define DEBUG_OUTPUT
 #include <DebugUtils.h>
 
 #define CONNECTOR "mqtt"
-#define TOPIC_LIGHT_LEVEL "logbucket/iot-test/home/dining_room/light_level"
-#define TOPIC_TANK_LEVEL "logbucket/iot-test/home/dining_room/tank_level"
+#define TOPIC_DISPLAY "squeezebox/display/Dining Room"
+#define TOPIC_COMMAND "squeezebox/command/Dining Room"
 
-#define TOPIC_LIGHT "iot-test/#"
-
-int tank_alert_level = 50;
-int tank_last_level = 0;
-
-Ultrasonic ranger(12,13);
-int light = LOW;
+LiquidCrystal lcd(12,11,5,4,3,2);
 
 void setup(){
   DEBUG_INIT(9600)
   Ciao.begin();
-  pinMode(8, OUTPUT);
+  lcd.begin(16,2);
+  lcd.print("Loading...");
+  pinMode(8,INPUT);
   DEBUG_PRINTLN("setup complete.")
 }
 
+int play_pause = 0;
+
 void loop(){
-  //TODO: light level alarm: 
-  //  set alarm level by inbound message
-  //  notify when level breached
-  CiaoData data = Ciao.read(CONNECTOR, TOPIC_LIGHT);
-  DEBUG_PRINT("Received: ")
-  DEBUG_PRINT(data.get(0))
-  DEBUG_PRINT(": ")
-  DEBUG_PRINT(data.get(1))
-  DEBUG_PRINT(": ")
-  DEBUG_PRINTLN(data.get(2))
+  CiaoData data = Ciao.read(CONNECTOR, TOPIC_DISPLAY);
   if (!data.isEmpty()){
     const char* value = data.get(2);
-    DEBUG_PRINT("Received: ")
+    DEBUG_PRINT("Display received: ")
     DEBUG_PRINTLN(value)
-
+    lcd.clear();
+    const char* pc = value;
+    for(; *pc != '\t' && *pc != 0; ++pc){
+      lcd.print(*pc);
+    }
+    lcd.setCursor(0,1);
+    for(++pc; *pc != '\t' && *pc != 0; ++pc){
+      lcd.print(*pc);
+    }
   }
-  digitalWrite(8, light);
-  int light_level = analogRead(A0);
-  //Ciao.write(CONNECTOR, TOPIC_LIGHT_LEVEL, String(light_level));
-  long tank_level = ranger.Ranging(CM);
-  if(tank_level < tank_alert_level && tank_last_level > tank_alert_level){
-    Ciao.write(CONNECTOR, TOPIC_TANK_LEVEL, "LOW");
+  int button = digitalRead(8);
+  if(play_pause != button){ 
+    DEBUG_PRINT("play/pause: ")
+    DEBUG_PRINTLN(button)
+    play_pause = button;
+    if(play_pause){
+      DEBUG_PRINTLN("publishing...")
+      Ciao.write(CONNECTOR, TOPIC_COMMAND, "pause");
+    }
   }
-  tank_last_level = tank_level;
-  delay(5000);
-} 
+}
