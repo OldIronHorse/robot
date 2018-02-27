@@ -1,9 +1,10 @@
-#define WIFI_OUTPUT
-#include <DebugUtils.h>
+#include <UnoWiFiDevEd.h>
 #include "scan.h"
 
 #define TURN_STEP_MS 75
 #define MAX_TURN_STEPS 36
+
+char buf[12];
 
 void Scan::setup(unsigned int speed){
 }
@@ -11,7 +12,8 @@ void Scan::setup(unsigned int speed){
 void Scan::loop(unsigned int speed){
   switch(_state){
     case FORWARD:{
-        uint16_t range = _lidar.readRangeContinuousMillimeters();
+        uint16_t range = _lidar.readRangeSingleMillimeters();
+        Ciao.write("mqtt", "debug/Scan/loop/FORWARD", itoa(int(range), buf, 10));
         if(range < 150){
           _rover.stop();
           _state = SCAN;
@@ -27,7 +29,8 @@ void Scan::loop(unsigned int speed){
       if(millis() - _last_ranging_ms > TURN_STEP_MS){
         _rover.stop();
         ++_turn_index;
-        uint16_t range = _lidar.readRangeContinuousMillimeters();
+        uint16_t range = _lidar.readRangeSingleMillimeters();
+        Ciao.write("mqtt", "debug/Scan/loop/SCAN", itoa(int(range), buf, 10));
         if(range > _max_range){
           _max_range = range;
           _max_range_turn_index = _turn_index;
@@ -41,7 +44,8 @@ void Scan::loop(unsigned int speed){
       }
       break;
     case TURN:
-        uint16_t range = _lidar.readRangeContinuousMillimeters();
+        uint16_t range = _lidar.readRangeSingleMillimeters();
+        Ciao.write("mqtt", "arduino/debug/Scan/loop/TURN", itoa(int(range), buf, 10));
         if(range + 5 >= _max_range){
           _rover.forward(speed);
           _state = FORWARD;

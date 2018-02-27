@@ -1,11 +1,8 @@
-#define WIFI_OUTPUT
-#include <DebugUtils.h>
 #include <UnoWiFiDevEd.h>
 #include <IRremote.h>
 #include <rover.h>
 #include <ir_cmd.h>
 #include <Wire.h>
-#include <VL53L0X.h>
 #include "avoid.h"
 #include "scan.h"
 
@@ -19,28 +16,29 @@ IRrecv ir_recv(9);
 decode_results results;
 enum Mode {REMOTE, AVOID, SCAN};
 Mode mode;
-unsigned int speed = Rover::max_speed;
+unsigned int speed = Rover::max_speed / 2;
 unsigned int last_cmd = ir_cmd::none;
 
 void setup(){
-  DEBUG_INIT(9600)
+  const char* topic = "debug/setup";
+  Ciao.begin();
   Wire.begin();
   lidar.init();
   lidar.setTimeout(500);
-  //lidar.setMeasurementTimingBudget(20000); // high speed
+  lidar.setMeasurementTimingBudget(20000); // high speed
   //lidar.setMeasurementTimingBudget(200000); // high accuracy
-  lidar.startContinuous(); // continuous ranging
+  //lidar.startContinuous(); // continuous ranging
   rover.setup();
   avoid.setup(speed);
   scan.setup(speed);
   ir_recv.enableIRIn();
   mode = REMOTE;
   rover.stop();
-  DEBUG_PRINTLN("Rover started.");
-  DEBUG_PRINTLN("mode = REMOTE");
+  Ciao.write("mqtt", topic, "REMOTE");
 }
 
 void loop(){
+  const char* topic = "debug/loop";
   unsigned int cmd = ir_cmd::none;
   if(ir_recv.decode(&results)){
     cmd = ir_cmd::cmd_from_value(results.value);
@@ -49,17 +47,17 @@ void loop(){
       case ir_cmd::d1:
         mode = REMOTE;
         rover.stop();
-        DEBUG_PRINTLN("mode = REMOTE");
+        Ciao.write("mqtt", topic, "REMOTE");
         break;
       case ir_cmd::d2:
         mode = AVOID;
         rover.forward(speed);
-        DEBUG_PRINTLN("mode = AVOID");
+        Ciao.write("mqtt", topic, "AVOID");
         break;
       case ir_cmd::d3:
         mode = SCAN;
         scan.start(speed);
-        DEBUG_PRINTLN("mode = SCAN");
+        Ciao.write("mqtt", topic, "SCAN");
         break;
       case ir_cmd::vol_up:
         speed = min(speed + 5, Rover::max_speed);

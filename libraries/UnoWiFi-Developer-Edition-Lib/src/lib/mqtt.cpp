@@ -5,6 +5,9 @@
  *       Tuan PM <tuanpm@live.com>
  */
 
+#define DEBUG_OUTPUT True
+#include <DebugUtils.h>
+
 #include "mqtt.h"
 
 
@@ -14,6 +17,7 @@ MQTT::MQTT(ESP *esp8266)
 }
 boolean MQTT::begin(const char* client_id, const char* user, const char* pass, uint16_t keep_alive, boolean clean_seasion)
 {
+  DEBUG_PRINTLN("MQTT::begin")
   uint16_t crc;
   uint32_t cb_data;
 
@@ -65,6 +69,12 @@ boolean MQTT::lwt(const char* topic, const char* message)
 }
 void MQTT::connect(const char* host, uint32_t port, boolean security)
 {
+  DEBUG_PRINT("MQTT::connect: ")
+  DEBUG_PRINT(host)
+  DEBUG_PRINT(", ")
+  DEBUG_PRINT(port)
+  DEBUG_PRINT(", ")
+  DEBUG_PRINTLN(security)
   uint16_t crc;
   crc = esp->request(CMD_MQTT_CONNECT, 0, 0, 4);
   crc = esp->request(crc,(uint8_t*)&remote_instance, 4);
@@ -80,13 +90,18 @@ void MQTT::connect(const char* host, uint32_t port)
 
 void MQTT::disconnect()
 {
+  DEBUG_PRINT("MQTT::disconnect")
   uint16_t crc;
   crc = esp->request(CMD_MQTT_DISCONNECT, 0, 0, 1);
   crc = esp->request(crc,(uint8_t*)&remote_instance, 4);
   esp->request(crc);
 }
 void MQTT::subscribe(const char* topic, uint8_t qos)
-{
+{  
+  DEBUG_PRINT("MQTT::subscribe: ")
+  DEBUG_PRINT(topic)
+  DEBUG_PRINT(", ")
+  DEBUG_PRINTLN(qos)
   uint16_t crc;
   crc = esp->request(CMD_MQTT_SUBSCRIBE, 0, 0, 3);
   crc = esp->request(crc,(uint8_t*)&remote_instance, 4);

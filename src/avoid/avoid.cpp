@@ -1,6 +1,5 @@
-#define WIFI_OUTPUT
-#include <DebugUtils.h>
 #include <Arduino.h>
+#include <UnoWiFiDevEd.h>
 #include "avoid.h"
 
 //TODO: Interrupt-based range checking?
@@ -28,9 +27,10 @@ void Avoid::setup(unsigned int speed){
 }
 
 void Avoid::loop(unsigned int speed){
-  //uint16_t range = lidar.readRangeSingleMillimeters();
-  uint16_t range = lidar.readRangeContinuousMillimeters();
-  DEBUG_PRINTLN(int(range))
+  char buf[12];
+  uint16_t range = lidar.readRangeSingleMillimeters();
+  //uint16_t range = lidar.readRangeContinuousMillimeters();
+  Ciao.write("mqtt", "debug/Avoid/loop/range", itoa(int(range), buf, 10));
   switch(state){
     case running:
       if(range < min_range_mm){

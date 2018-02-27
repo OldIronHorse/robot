@@ -38,19 +38,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   Serial.println(str);
 #elif defined(WIFI_OUTPUT)
 #include <UnoWiFiDevEd.h>
-#define DEBUG_INIT(speed) Wifi.begin();
-#define DEBUG_PRINT(str) Wifi.print(str);
-#define DEBUG_PRINTLN(str) Wifi.println(str);
+#define CIAO_WRITE(str) Ciao.write("mqtt","arduino/DebugUtils/debug", str);
+#define DEBUG_INIT(speed) Ciao.begin(); delay(5000);
+#define DEBUG_PRINT(str) CIAO_WRITE(str)
+#define DEBUG_PRINTLN(str) CIAO_WRITE(str)
 #define DEBUG_PRETTYPRINT(str) \
-  Wifi.print(millis());     \
-  Wifi.print(": ");    \
-  Wifi.print(__PRETTY_FUNCTION__); \
-  Wifi.print(' ');      \
-  Wifi.print(__FILE__);     \
-  Wifi.print(':');      \
-  Wifi.print(__LINE__);     \
-  Wifi.print(' ');      \
-  Wifi.println(str);
+  CIAO_WRITE(millis());     \
+  CIAO_WRITE(__PRETTY_FUNCTION__); \
+  CIAO_WRITE(__FILE__);     \
+  CIAO_WRITE(__LINE__);     \
+  CIAO_WRITE(str);
 #else
 #define DEBUG_INIT(speed)
 #define DEBUG_PRINT(str)

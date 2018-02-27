@@ -26,6 +26,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 */
 
+//#define DEBUG_OUTPUT True
+#include <DebugUtils.h>
 
 #include <UnoWiFiDevEd.h>
 #include <stdarg.h>
@@ -73,6 +75,10 @@ void mqttData(void* response)
   RESPONSE res(response);
 	mqtt_topic = res.popString();
 	mqtt_data_tmp = res.popString();
+  DEBUG_PRINT("mqttData: ")
+  DEBUG_PRINT(mqtt_topic)
+  DEBUG_PRINT(", ")
+  DEBUG_PRINTLN(mqtt_data_tmp)
 }
 
 void ArduinoWifiClass::connect(char* ssid,char* pwd){
@@ -112,7 +118,16 @@ void check_topic(const char* topic){
 		attached = true;
 	}
 	if(topic_number < TOPIC_NUM){
+    DEBUG_PRINTLN("check_topic, topic_array:")
+    DEBUG_PRINT("0: ")
+    DEBUG_PRINTLN(topic_array[0])
+    DEBUG_PRINT("1: ")
+    DEBUG_PRINTLN(topic_array[1])
+    DEBUG_PRINT("2: ")
+    DEBUG_PRINTLN(topic_array[2])
 		if(topic_number==0){
+      DEBUG_PRINT("check_topic, topic_num==0, subscribing to: ")
+      DEBUG_PRINTLN(topic)
 			mqtt.subscribe(topic);
 			topic_number++;
 		}
@@ -121,8 +136,12 @@ void check_topic(const char* topic){
 			for(int idx=0; idx < topic_number; idx++)
 				check = strcmp(topic,topic_array[idx]);
 			if(check){
+        DEBUG_PRINT("check_topic, subscribing to: ")
+        DEBUG_PRINTLN(topic)
 				mqtt.subscribe(topic);
 				topic_number++;
+        DEBUG_PRINT(" topic_number: ")
+        DEBUG_PRINTLN(topic_number)
 			}
 		}
 	}
@@ -172,8 +191,16 @@ CiaoData requestGET(const char* hostname, String data){
 	return responseREAD();
 }
 CiaoData PassThroughRead(const char* connector, const char* hostname, String data, const char* method){
-
-
+/*
+  DEBUG_PRINT("PassThroughRead: ")
+  DEBUG_PRINT(connector)
+  DEBUG_PRINT(", ")
+  DEBUG_PRINT(hostname)
+  DEBUG_PRINT(", ")
+  DEBUG_PRINT(data)
+  DEBUG_PRINT(", ")
+  DEBUG_PRINTLN(method)
+*/
 	//short mode = 0;
 
 	if (!strcmp(connector, "rest")){
@@ -194,9 +221,14 @@ CiaoData PassThroughRead(const char* connector, const char* hostname, String dat
 	}
 	else if (!strcmp(connector, "mqtt")){
 		//mode = 1;
+    //DEBUG_PRINTLN("\tmqtt...")
 		CiaoData ciao_data;
 		esp.process();
+    //DEBUG_PRINT("\ttopic: ")
+    //DEBUG_PRINTLN(mqtt_topic)
 		check_topic(hostname);
+    //DEBUG_PRINT("\ttopic: ")
+    //DEBUG_PRINTLN(mqtt_topic)
 		char topic[mqtt_topic.length()+1];
 		mqtt_topic.toCharArray(topic,mqtt_topic.length()+1);
 		if(mqtt_data_tmp != "" && !strcmp(hostname,topic)){
